@@ -6,7 +6,7 @@
     isNormalUser = true;
     description = "Musa Murad";
     extraGroups = [ "networkmanager" "wheel" "video" "audio" ];
-    initialPassword = "040810";
+    hashedPassword = "$6$tFhMrTUbXvCtUK2O$VyQs7xSfEOGBPZlb8UZPOZEA6tr2ZR5ixEvbO1wwhN6iGb3kmgvTCVDbGmAx1u33FSomD4wWIQFw.ly3yGj141";
   };
 
   # --- BOOT & NIX SYSTEM SETTINGS ---
