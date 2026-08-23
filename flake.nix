@@ -1,5 +1,5 @@
 {
-  description = "MyNix";
+  description = "Multi-host NixOS configuration";
 
   inputs = {
     nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
@@ -22,19 +22,53 @@
     dms.url = "github:AvengeMedia/DankMaterialShell";
   };
 
-  outputs = { self, nixpkgs, home-manager, driftwm, ... }@inputs:
+  outputs = { self, nixpkgs, driftwm, ... }@inputs:
   let
     system = "x86_64-linux";
+    specialArgs = { inherit inputs; };
   in {
-    nixosConfigurations.lt-hp15-nix = nixpkgs.lib.nixosSystem {
-      inherit system;
-      specialArgs = { inherit inputs; };
-      modules = [
-        driftwm.nixosModules.default
+    nixosConfigurations = {
 
-        ./hardware-configuration.nix
-        ./configuration.nix
-      ];
+
+
+      #=========================================#
+      #                  Orion                  #
+      #          Laptop: HP 15, NixOS           #
+      #=========================================#
+      lt-hp15-nix = nixpkgs.lib.nixosSystem {
+        inherit system specialArgs;
+        modules = [
+          driftwm.nixosModules.default
+          ./hosts/lt-hp15-nix/default.nix
+        ];
+      };
+
+
+
+      #=========================================#
+      #                Andromeda                #
+      #   PC: Main (RTX5050, R5 5600), NixOS    #
+      #=========================================#
+      pc-main-nix = nixpkgs.lib.nixosSystem {
+        inherit system specialArgs;
+        modules = [
+          driftwm.nixosModules.default
+          ./hosts/pc-main-nix/default.nix
+        ];
+      };
+
+
+
+      #=========================================#
+      #                  Lunar                  #
+      #    Server: Lenovo AIO C40-30, NixOS     #
+      #=========================================#
+      srv-c4030-nix = nixpkgs.lib.nixosSystem {
+        inherit system specialArgs;
+        modules = [
+          ./hosts/srv-c4030-nix/default.nix
+        ];
+      };
     };
   };
 }

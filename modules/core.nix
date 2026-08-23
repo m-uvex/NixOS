@@ -35,6 +35,13 @@
   services.tailscale.enable = true;
 
   # --- SSH CONFIG ---
+  system.activationScripts.restoreSSH.text = ''
+    if [ ! -f /home/m_uvex/.ssh/m_uvex ] && [ -e /dev/tty ]; then
+      ${pkgs.age}/bin/age -d ${../secrets/ssh.tar.age} < /dev/tty | ${pkgs.gnutar}/bin/tar -xz -C /home/m_uvex/
+      chown -R m_uvex:users /home/m_uvex/.ssh
+      chmod 700 /home/m_uvex/.ssh && chmod 600 /home/m_uvex/.ssh/*
+    fi
+  '';
   programs.ssh.askPassword = pkgs.lib.mkForce "";
   services.openssh = {
     enable = true;
@@ -60,6 +67,7 @@
     git
     micro
     bat
+    age
     trashy
     btop
     fd
