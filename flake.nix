@@ -29,7 +29,7 @@
     specialArgs = { inherit inputs; };
 
     # Standalone Home Manager helper
-    mkRice = extraModules: home-manager.lib.homeManagerConfiguration {
+    mkRice = { extraModules ? [], extraHyprlandConfig ? "" }: home-manager.lib.homeManagerConfiguration {
       inherit pkgs;
       extraSpecialArgs = { inherit inputs; };
       modules = [
@@ -37,6 +37,26 @@
           home.username = "m_uvex";
           home.homeDirectory = "/home/m_uvex";
           home.stateVersion = "24.05";
+
+          # Declaratively manage Hyprland dotfiles
+          wayland.windowManager.hyprland = {
+            enable = true;
+            settings = {
+              "$mod" = "SUPER";
+              bind = [
+                "$mod, Q, exec, kitty"
+                "$mod, C, killactive,"
+                "$mod, M, exit,"
+                "$mod, E, exec, nautilus"
+                "$mod, V, togglefloating,"
+                "$mod, R, exec, rofi -show drun"
+              ];
+            };
+            extraConfig = ''
+              monitor=,preferred,auto,auto
+              ${extraHyprlandConfig}
+            '';
+          };
         }
       ] ++ extraModules;
     };
@@ -82,23 +102,38 @@
       #=========================================#
       #             Caelestia Shell             #
       #=========================================#
-      caelestia = mkRice [
-        inputs.caelestia-shell.homeManagerModules.default
-      ];
+      caelestia = mkRice {
+        extraModules = [
+          inputs.caelestia-shell.homeManagerModules.default
+        ];
+        extraHyprlandConfig = ''
+          exec-once = caelestia
+        '';
+      };
 
       #=========================================#
       #             Midnight Shell              #
       #=========================================#
-      midnight = mkRice [
-        inputs.midnight-shell.homeManagerModules.default
-      ];
+      midnight = mkRice {
+        extraModules = [
+          inputs.midnight-shell.homeManagerModules.default
+        ];
+        extraHyprlandConfig = ''
+          exec-once = midnight
+        '';
+      };
 
       #=========================================#
       #           DankMaterialShell             #
       #=========================================#
-      dms = mkRice [
-        inputs.dms.homeManagerModules.default
-      ];
+      dms = mkRice {
+        extraModules = [
+          inputs.dms.homeManagerModules.default
+        ];
+        extraHyprlandConfig = ''
+          exec-once = dms
+        '';
+      };
     };
   };
 }
