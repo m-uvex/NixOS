@@ -25,7 +25,7 @@
     stremio-linux-shell vacuum-tube
 
     # Dev & Tools
-    jetbrains.idea-community antigravity antigravity-cli antigravity-ide android-studio
+    jetbrains.idea antigravity antigravity-cli antigravity-ide android-studio
     python3 nodejs gcc gnumake pkg-config
     opencode opencode-desktop
 

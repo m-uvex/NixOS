@@ -34,7 +34,8 @@
   networking.firewall.enable = false;
   services.tailscale.enable = true;
 
-  # --- SSH CONFIG ---
+  # --- SSH CONFIG WIP ---
+  /*
   system.activationScripts.restoreSSH.text = ''
     if [ ! -f /home/m_uvex/.ssh/m_uvex ] && [ -e /dev/tty ]; then
       ${pkgs.age}/bin/age -d ${../secrets/ssh.tar.age} < /dev/tty | ${pkgs.gnutar}/bin/tar -xz -C /home/m_uvex/
@@ -56,6 +57,7 @@
     Host *
       IdentityFile ~/.ssh/m_uvex
   '';
+  */
   
   # WoL alias for pc-main-nix (wake-pc)
   environment.shellAliases = {
