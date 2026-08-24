@@ -16,6 +16,7 @@ Declarative, flake-based NixOS configuration managing personal workstations, gam
 
 ## 📁 Repository Structure
 
+```
 .
 ├── flake.nix              # Flake inputs, outputs, and system definitions
 ├── hosts/
@@ -31,6 +32,7 @@ Declarative, flake-based NixOS configuration managing personal workstations, gam
 │   └── remote-host.nix    # Sunshine streaming host & Wake-on-LAN udev rules
 └── secrets/
     └── ssh.tar.age        # Passphrase-encrypted ~/.ssh archive bundle
+```
 
 ---
 
