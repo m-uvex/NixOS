@@ -9,6 +9,11 @@
   programs.driftwm.enable = true;
   programs.dconf.enable = true;
 
+  # --- DESKTOP SERVICES & INTEGRATIONS ---
+  services.geoclue2.enable = true;
+  services.upower.enable = true;
+  services.gvfs.enable = true;
+
   # --- POLKIT AUTH AGENT ---
   security.polkit.enable = true;
   systemd.user.services.polkit-gnome-authentication-agent-1 = {
@@ -53,6 +58,7 @@
 
   # --- FONTS ---
   fonts.packages = with pkgs; [
+    rubik
     nerd-fonts.jetbrains-mono
     nerd-fonts.ubuntu
     noto-fonts-color-emoji

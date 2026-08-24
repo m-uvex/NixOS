@@ -4,6 +4,12 @@
   inputs = {
     nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
 
+    # Home Manager
+    home-manager = {
+      url = "github:nix-community/home-manager";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+
     # Custom Software
     zen-browser.url = "github:youwen5/zen-browser-flake";
     nix-software-center.url = "github:snowfallorg/nix-software-center";
@@ -20,11 +26,17 @@
     };
   };
 
-  outputs = { self, nixpkgs, driftwm, ... }@inputs:
+  outputs = { self, nixpkgs, home-manager, driftwm, ... }@inputs:
   let
     system = "x86_64-linux";
     pkgs = nixpkgs.legacyPackages.${system};
     specialArgs = { inherit inputs; };
+
+    homeManagerModule = {
+      home-manager.useGlobalPkgs = true;
+      home-manager.useUserPackages = true;
+      home-manager.extraSpecialArgs = specialArgs;
+    };
   in {
 
     nixosConfigurations = {
@@ -36,6 +48,8 @@
         inherit system specialArgs;
         modules = [
           driftwm.nixosModules.default
+          home-manager.nixosModules.home-manager
+          homeManagerModule
           ./hosts/lt-hp15-nix/default.nix
         ];
       };
@@ -48,6 +62,8 @@
         inherit system specialArgs;
         modules = [
           driftwm.nixosModules.default
+          home-manager.nixosModules.home-manager
+          homeManagerModule
           ./hosts/pc-main-nix/default.nix
         ];
       };
@@ -64,34 +80,32 @@
       };
     };
 
-      #=========================================#
-      #              end4-pC Shell              #
-      #=========================================#
-      end4-pc = mkRice {
-        extraModules = [
-          inputs.illogical-flake.homeManagerModules.default
-          {
-            # Enable the base illogical-impulse framework
-            programs.illogical-impulse = {
-              enable = true;
-              dotfiles = {
-                fish.enable = true;
-                kitty.enable = true;
-                starship.enable = true;
-              };
+    #=========================================#
+    #              end4-pC Shell              #
+    #=========================================#
+    end4-pc = mkRice {
+      extraModules = [
+        inputs.illogical-flake.homeManagerModules.default
+        {
+          programs.illogical-impulse = {
+            enable = true;
+            dotfiles = {
+              fish.enable = true;
+              kitty.enable = true;
+              starship.enable = true;
             };
-            xdg.configFile."quickshell/end4-pC".source = inputs.end4-pC;
-            home.sessionVariables = {
-              qsConfig = "end4-pC";
-            };
-          }
-        ];
-        extraHyprlandConfig = ''
-          # Ensure Hyprland injects the profile variable and binds the settings menu
-          env = qsConfig,end4-pC
-          bind = SUPER, ESCAPE, global, quickshell:settingsToggle
-        '';
-      };
+          };
+          xdg.configFile."quickshell/end4-pC".source = inputs.end4-pC;
+          home.sessionVariables = {
+            qsConfig = "end4-pC";
+          };
+        }
+      ];
+      extraHyprlandConfig = ''
+        # Ensure Hyprland injects the profile variable and binds the settings menu
+        env = qsConfig,end4-pC
+        bind = SUPER, ESCAPE, global, quickshell:settingsToggle
+      '';
     };
   };
 }
