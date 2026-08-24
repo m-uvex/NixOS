@@ -15,7 +15,7 @@
     nix-software-center.url = "github:snowfallorg/nix-software-center";
     driftwm.url = "github:malbiruk/driftwm";
 
-    # Illogical Impulse & end4-pC
+    # illogical-impulse & end4-pC UI Profiles
     illogical-flake = {
       url = "github:soymou/illogical-flake";
       inputs.nixpkgs.follows = "nixpkgs";
@@ -42,7 +42,7 @@
     nixosConfigurations = {
       #=========================================#
       #                 Orion                   #
-      #         Laptop: HP 15, NixOS            #
+      #           Laptop: HP 15, NixOS          #
       #=========================================#
       lt-hp15-nix = nixpkgs.lib.nixosSystem {
         inherit system specialArgs;
@@ -78,34 +78,6 @@
           ./hosts/srv-c4030-nix/default.nix
         ];
       };
-    };
-
-    #=========================================#
-    #              end4-pC Shell              #
-    #=========================================#
-    end4-pc = mkRice {
-      extraModules = [
-        inputs.illogical-flake.homeManagerModules.default
-        {
-          programs.illogical-impulse = {
-            enable = true;
-            dotfiles = {
-              fish.enable = true;
-              kitty.enable = true;
-              starship.enable = true;
-            };
-          };
-          xdg.configFile."quickshell/end4-pC".source = inputs.end4-pC;
-          home.sessionVariables = {
-            qsConfig = "end4-pC";
-          };
-        }
-      ];
-      extraHyprlandConfig = ''
-        # Ensure Hyprland injects the profile variable and binds the settings menu
-        env = qsConfig,end4-pC
-        bind = SUPER, ESCAPE, global, quickshell:settingsToggle
-      '';
     };
   };
 }
