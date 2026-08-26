@@ -6,7 +6,7 @@
   environment.systemPackages = with pkgs; [
     # Terminal, Bar, & Rice Utilities
     kitty polkit_gnome playerctl libnotify steam-run
-    wl-clipboard grim slurp rofi waybar swww cliphist
+    wl-clipboard grim slurp rofi waybar awww cliphist quickshell
     matugen dart-sass gtk4 gtk4-layer-shell glib cairo
     python3Packages.pygobject3 python3Packages.pycairo
 
