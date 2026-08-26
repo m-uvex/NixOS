@@ -32,6 +32,33 @@ Declarative, flake-based NixOS configuration managing personal workstations, gam
 │   └── remote-host.nix    # Sunshine streaming host & Wake-on-LAN udev rules
 └── secrets/
     └── ssh.tar.age        # Passphrase-encrypted ~/.ssh archive bundle
+    
+
+.
+├── assets
+│   └── Wallpapers
+│       ├── Dark...
+│       └── Light...
+├── flake.nix
+├── hosts
+│   ├── lt-hp15-nix
+│   │   ├── default.nix
+│   │   └── hardware-configuration.nix
+│   ├── pc-main-nix
+│   │   └── default.nix
+│   └── srv-c4030-nix
+│       └── default.nix
+├── modules
+│   ├── apps.nix
+│   ├── core.nix
+│   ├── desktop.nix
+│   ├── docker.nix
+│   ├── gaming.nix
+│   ├── home.nix
+│   └── remote-host.nix
+├── README.md
+└── secrets
+    └── ssh.tar.age
 ```
 
 ---

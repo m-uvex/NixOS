@@ -4,18 +4,9 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="f7824674-0ffe-480a-8577-4d98bbad95b8" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_8_23_26,_10_58 PM_[Changes]/shelved.patch" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_8_23_26__10_58PM__Changes_.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_8_24_26,_8_52 PM_[Changes]/shelved.patch" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_8_24_26__8_52PM__Changes_.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/hosts/lt-hp15-nix/hardware-configuration.nix" afterDir="false" />
+    <list default="true" id="f7824674-0ffe-480a-8577-4d98bbad95b8" name="Changes" comment="fix: fixed end4-pC hopefully.&#10;remove: .gitignore-d .idea, commented out modrinth from gaming.nix (compiling takes too long)">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/flake.nix" beforeDir="false" afterPath="$PROJECT_DIR$/flake.nix" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/modules/apps.nix" beforeDir="false" afterPath="$PROJECT_DIR$/modules/apps.nix" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/modules/gaming.nix" beforeDir="false" afterPath="$PROJECT_DIR$/modules/gaming.nix" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/modules/home.nix" beforeDir="false" afterPath="$PROJECT_DIR$/modules/home.nix" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/README.md" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -23,11 +14,71 @@
     <option name="LAST_RESOLUTION" value="IGNORE" />
   </component>
   <component name="Git.Settings">
+    <option name="PUSH_AUTO_UPDATE" value="true" />
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
   <component name="McpProjectServerCommands">
     <commands />
     <urls />
+  </component>
+  <component name="NextEditCompletionFeaturesState">
+    <decayedCancelled>
+      <entry key="MS100" value="1.3124734864035101" />
+      <entry key="MS500" value="2.719237268541736" />
+      <entry key="S2" value="4.691054184532831" />
+      <entry key="S5" value="5.758299434492259" />
+      <entry key="S10" value="6.297434324002687" />
+      <entry key="S30" value="6.743474357763572" />
+      <entry key="S60" value="6.868657730231077" />
+      <entry key="M2" value="6.9673234658385725" />
+      <entry key="M5" value="9.327958091830025" />
+      <entry key="M10" value="16.68821402416779" />
+      <entry key="M15" value="22.54645854119701" />
+      <entry key="M30" value="31.938776063751284" />
+      <entry key="H1" value="38.58430628420099" />
+      <entry key="H2" value="42.54399794618254" />
+      <entry key="H4" value="44.70624184033468" />
+      <entry key="D1" value="46.60824022807905" />
+      <entry key="W1" value="46.943797998485564" />
+    </decayedCancelled>
+    <decayedSelected>
+      <entry key="MS100" value="0.0" />
+      <entry key="MS500" value="0.0" />
+      <entry key="S2" value="0.0" />
+      <entry key="S5" value="0.0" />
+      <entry key="S10" value="0.0" />
+      <entry key="S30" value="0.0" />
+      <entry key="S60" value="0.0" />
+      <entry key="M2" value="0.0" />
+      <entry key="M5" value="0.0" />
+      <entry key="M10" value="0.0" />
+      <entry key="M15" value="0.0" />
+      <entry key="M30" value="0.0" />
+      <entry key="H1" value="0.0" />
+      <entry key="H2" value="0.0" />
+      <entry key="H4" value="0.0" />
+      <entry key="D1" value="0.0" />
+      <entry key="W1" value="0.0" />
+    </decayedSelected>
+    <decayedShown>
+      <entry key="MS100" value="1.1685128709301231" />
+      <entry key="MS500" value="2.6581876879343014" />
+      <entry key="S2" value="4.664090307928408" />
+      <entry key="S5" value="5.744217279997503" />
+      <entry key="S10" value="6.289431670125019" />
+      <entry key="S30" value="6.740523979834213" />
+      <entry key="S60" value="6.867141607799736" />
+      <entry key="M2" value="6.966544497464098" />
+      <entry key="M5" value="9.32736742899144" />
+      <entry key="M10" value="16.687483573035053" />
+      <entry key="M15" value="22.545741281784583" />
+      <entry key="M30" value="31.93823313712449" />
+      <entry key="H1" value="38.58396970370471" />
+      <entry key="H2" value="42.543810268885984" />
+      <entry key="H4" value="44.706142710177346" />
+      <entry key="D1" value="46.60822293077553" />
+      <entry key="W1" value="46.943795507896326" />
+    </decayedShown>
   </component>
   <component name="ProjectColorInfo">{
   &quot;customColor&quot;: &quot;&quot;,
@@ -47,7 +98,7 @@
     "git-widget-placeholder": "main",
     "kotlin-language-version-configured": "true",
     "last_opened_file_path": "/home/m_uvex",
-    "settings.editor.selected.configurable": "preferences.lookFeel"
+    "settings.editor.selected.configurable": "preferences.pluginManager"
   }
 }]]></component>
   <component name="RunManager">
@@ -121,5 +172,9 @@
         </entry>
       </map>
     </option>
+  </component>
+  <component name="VcsManagerConfiguration">
+    <MESSAGE value="fix: fixed end4-pC hopefully.&#10;remove: .gitignore-d .idea, commented out modrinth from gaming.nix (compiling takes too long)" />
+    <option name="LAST_COMMIT_MESSAGE" value="fix: fixed end4-pC hopefully.&#10;remove: .gitignore-d .idea, commented out modrinth from gaming.nix (compiling takes too long)" />
   </component>
 </project>
