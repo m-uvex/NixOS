@@ -11,9 +11,18 @@
     };
 
     # Custom Software
-    zen-browser.url = "github:youwen5/zen-browser-flake";
-    nix-software-center.url = "github:snowfallorg/nix-software-center";
-    driftwm.url = "github:malbiruk/driftwm";
+    zen-browser = {
+      url = "github:youwen5/zen-browser-flake";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+    nix-software-center = {
+      url = "github:snowfallorg/nix-software-center";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+    driftwm = {
+      url = "github:malbiruk/driftwm";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
 
     # illogical-impulse & end4-pC UI Profiles
     illogical-flake = {
