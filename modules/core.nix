@@ -5,9 +5,52 @@
   users.users."m_uvex" = {
     isNormalUser = true;
     description = "Musa Murad";
-    extraGroups = [ "networkmanager" "wheel" "video" "audio" ];
+    extraGroups = [ "networkmanager" "wheel" "video" "audio" "storage" ];
     hashedPassword = "$6$tFhMrTUbXvCtUK2O$VyQs7xSfEOGBPZlb8UZPOZEA6tr2ZR5ixEvbO1wwhN6iGb3kmgvTCVDbGmAx1u33FSomD4wWIQFw.ly3yGj141";
   };
+
+  # --- DISK MANAGEMENT & AUTOMOUNT (SERVER + DESKTOP) ---
+  services.udisks2.enable = true;
+  services.gvfs.enable = true;
+
+  # Headless automount daemon running at boot for all hosts
+  systemd.services.udiskie-automount = {
+    description = "Headless Removable Disk Automounter";
+    wantedBy = [ "multi-user.target" ];
+    after = [ "udisks2.service" ];
+    serviceConfig = {
+      ExecStart = "${pkgs.udiskie}/bin/udiskie --automount --no-tray --no-notify";
+      Restart = "always";
+      RestartSec = 5;
+      User = "m_uvex";
+    };
+  };
+
+  # --- FILESYSTEM DRIVERS & CORE CLI PACKAGES ---
+  environment.systemPackages = with pkgs; [
+    # Automount & Filesystem support
+    udiskie
+    ntfs3g
+    exfatprogs
+    dosfstools
+
+    # CLI tools
+    git
+    micro
+    bat
+    age
+    trashy
+    btop
+    fd
+    sl
+    home-manager
+    wget
+    curl
+    jq
+    socat
+    tailscale
+    wakeonlan
+  ];
 
   # --- BOOT & NIX SYSTEM SETTINGS ---
   boot.loader.systemd-boot.enable = true;
@@ -34,52 +77,8 @@
   networking.firewall.enable = false;
   services.tailscale.enable = true;
 
-  # --- SSH CONFIG WIP ---
-  /*
-  system.activationScripts.restoreSSH.text = ''
-    if [ ! -f /home/m_uvex/.ssh/m_uvex ] && [ -e /dev/tty ]; then
-      ${pkgs.age}/bin/age -d ${../secrets/ssh.tar.age} < /dev/tty | ${pkgs.gnutar}/bin/tar -xz -C /home/m_uvex/
-      chown -R m_uvex:users /home/m_uvex/.ssh
-      chmod 700 /home/m_uvex/.ssh && chmod 600 /home/m_uvex/.ssh/*
-    fi
-  '';
-  programs.ssh.askPassword = pkgs.lib.mkForce "";
-  services.openssh = {
-    enable = true;
-    settings = {
-      PasswordAuthentication = false;
-      KbdInteractiveAuthentication = false;
-      PermitRootLogin = "no";
-    };
-  };
-  users.users."m_uvex".openssh.authorizedKeys.keys = [ "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIKT+rzs85ZnNdaPFsc9FjNFASNYATaXY5qkWQEOJhHfc m_uvex" ];
-  programs.ssh.extraConfig = ''
-    Host *
-      IdentityFile ~/.ssh/m_uvex
-  '';
-  */
-  
   # WoL alias for pc-main-nix (wake-pc)
   environment.shellAliases = {
-    wake-pc = "ssh m_uvex@100.78.151.49 'wakeonlan 00:11:22:33:44:55'"; # EDIT MAC ADDRESS ONCE PC BUILT AND READY
+    wake-pc = "ssh m_uvex@100.78.151.49 'wakeonlan 00:11:22:33:44:55'";
   };
-
-  # --- CORE CLI PACKAGES ---
-  environment.systemPackages = with pkgs; [
-    git
-    micro
-    bat
-    age
-    trashy
-    btop
-    fd
-    sl
-    home-manager
-    wget
-    curl
-    jq
-    socat
-    tailscale
-    wakeonlan
-  ];
 }
