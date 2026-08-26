@@ -27,6 +27,7 @@
   # --- HYPRLAND CONFIGURATION FOR END4-PC ---
   wayland.windowManager.hyprland = {
     enable = true;
+    configType = "lua";
     settings = {
       "$mainMod" = "SUPER";
       "$terminal" = "kitty";
