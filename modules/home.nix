@@ -10,7 +10,7 @@
   # --- ILLOGICAL-IMPULSE & END4-PC ---
   imports = [
     inputs.illogical-flake.homeManagerModules.default
-    ./spacenix.nix
+    ./app-configs.nix
   ];
   programs.illogical-impulse.enable = true;
   xdg.configFile."quickshell/end4-pC".source = inputs.end4-pC;
