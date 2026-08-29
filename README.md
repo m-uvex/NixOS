@@ -1,4 +1,4 @@
-# ❄️ NixOS Multi-Host Fleet
+# ❄️ SpaceNIX
 
 Declarative, flake-based NixOS configuration managing personal workstations, gaming rigs, and server nodes across a unified Tailscale mesh.
 

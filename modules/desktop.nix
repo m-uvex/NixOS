@@ -8,11 +8,15 @@
   programs.hyprland.enable = true;
   programs.driftwm.enable = true;
   programs.dconf.enable = true;
+  environment.systemPackages = [ pkgs.nwg-displays ];
 
   # --- DESKTOP SERVICES & INTEGRATIONS ---
   services.geoclue2.enable = true;
   services.upower.enable = true;
   services.gvfs.enable = true;
+  services.gnome.gnome-keyring.enable = true;
+  programs.seahorse.enable = true;
+  security.pam.services.login.enableGnomeKeyring = true;
 
   # --- POLKIT AUTH AGENT ---
   security.polkit.enable = true;

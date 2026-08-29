@@ -1,5 +1,5 @@
 {
-  description = "Multi-host NixOS configuration";
+  description = "SpaceNIX";
 
   inputs = {
     nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";

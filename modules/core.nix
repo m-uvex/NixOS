@@ -37,6 +37,8 @@
     # CLI tools
     git
     micro
+    zoxide
+    fastfetch
     bat
     age
     trashy
@@ -81,6 +83,9 @@
   networking.networkmanager.enable = true;
   networking.firewall.enable = false;
   services.tailscale.enable = true;
+
+  # --- SHELLS ---
+  programs.fish.enable = true;
 
   # WoL alias for pc-main-nix (wake-pc)
   environment.shellAliases = {

@@ -10,35 +10,31 @@
   # --- ILLOGICAL-IMPULSE & END4-PC ---
   imports = [
     inputs.illogical-flake.homeManagerModules.default
+    ./spacenix.nix
   ];
-  programs.illogical-impulse = {
-    enable = true;
-    dotfiles = {
-      fish.enable = true;
-      kitty.enable = true;
-      starship.enable = true;
-    };
-  };
+  programs.illogical-impulse.enable = true;
   xdg.configFile."quickshell/end4-pC".source = inputs.end4-pC;
   home.sessionVariables = {
     qsConfig = "end4-pC";
   };
 
-  home.activation.configureEnd4pC = lib.hm.dag.entryAfter [ "copyIllogicalImpulseConfigs" ] ''
-    mkdir -p "$HOME/.config/hypr/custom"
+  # --- SPACENIX MODULAR CONFIGURATION MANAGER ---
+  # Configure any app to either "layer" (extend upstream) or "overwrite" (fully replace)
+  spacenix = {
+    enable = true;
+    profile = "spacenix";
 
-    cat > "$HOME/.config/hypr/custom/variables.lua" << 'EOF'
--- Set active quickshell configuration to end4-pC
-hl.env("qsConfig", "end4-pC")
-EOF
+    apps = {
+      # Hyprland: Layers custom lua scripts into ~/.config/hypr/custom/
+      hypr.mode = "layer";
 
-    cat > "$HOME/.config/hypr/custom/keybinds.lua" << 'EOF'
-hl.bind("CTRL+SUPER+ALT+Slash", hl.dsp.exec_cmd("xdg-open ~/.config/hypr/custom/keybinds.lua"), {description = "Edit user keybinds"} )
-hl.bind("SUPER + escape", hl.dsp.global("quickshell:settingsToggle"), {description = "Toggle settings"})
-EOF
+      # Kitty: Layers custom overrides into ~/.config/kitty/spacenix/ and includes in kitty.conf
+      kitty.mode = "layer";
 
-    chmod -R u+w "$HOME/.config/hypr/custom"
-  '';
+      # Fish: Overwrites ~/.config/fish with standalone clean end-4 configs
+      fish.mode = "overwrite";
+    };
+  };
 
   home.stateVersion = "24.05";
 }
