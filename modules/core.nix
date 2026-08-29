@@ -44,7 +44,6 @@
     trashy
     btop
     fd
-    sl
     home-manager
     wget
     curl
@@ -53,6 +52,15 @@
     tailscale
     wakeonlan
   ];
+
+  # --- REBUILD SCRIPT ---
+  environment.systemPackages = with pkgs; [
+    (writeShellScriptBin "rebuild" ''
+      HOST="''${1:-$(hostname)}"
+      exec sudo nixos-rebuild switch --flake "/etc/nixos#$HOST" "''${@:2}"
+    '')
+  ];
+
 
   # --- BOOT & NIX SYSTEM SETTINGS ---
   boot.loader.systemd-boot.enable = true;

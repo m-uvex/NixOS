@@ -23,7 +23,11 @@ if status is-interactive
     alias clear "printf '\033[2J\033[3J\033[1;1H'"
     alias celar "printf '\033[2J\033[3J\033[1;1H'"
     alias claer "printf '\033[2J\033[3J\033[1;1H'"
-    alias pamcan pacman
+    alias cd z
+    alias nano micro
+    alias cat bat
+    alias neofetch fastfetch
+    alias find fd
     alias q 'qs -c ii'
     if test "$TERM" != "linux"
         alias ls 'eza --icons=auto'

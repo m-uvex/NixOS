@@ -4,12 +4,10 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="f7824674-0ffe-480a-8577-4d98bbad95b8" name="Changes" comment="fix: Fixed end4-pC, now it loads on top of ii!!!!">
-      <change afterPath="$PROJECT_DIR$/config/hypr/spacenix/keybinds.lua" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/config/hypr/spacenix/variables.lua" afterDir="false" />
+    <list default="true" id="f7824674-0ffe-480a-8577-4d98bbad95b8" name="Changes" comment="In short, got a shit ton of shit done, in long...&#10;&#10;fix: Aded support for multi monitors&#10;fix: Added gnome keyring shit&#10;fix: Renamed to SpaceNIX&#10;feat: Declerative app configs (fish, kitty, hyprland tweaks)&#10;feat: New fish config with better looks and keybinds&#10;feat: Replaced cd with zoxide (aliased as cd), added fastfetch">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/modules/desktop.nix" beforeDir="false" afterPath="$PROJECT_DIR$/modules/desktop.nix" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/modules/home.nix" beforeDir="false" afterPath="$PROJECT_DIR$/modules/home.nix" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/config/fish/spacenix/config.fish" beforeDir="false" afterPath="$PROJECT_DIR$/config/fish/spacenix/config.fish" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/modules/core.nix" beforeDir="false" afterPath="$PROJECT_DIR$/modules/core.nix" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -26,23 +24,23 @@
   </component>
   <component name="NextEditCompletionFeaturesState">
     <decayedCancelled>
-      <entry key="MS100" value="1.3124734864035101" />
-      <entry key="MS500" value="2.719237268541736" />
-      <entry key="S2" value="4.691054184532831" />
-      <entry key="S5" value="5.758299434492259" />
-      <entry key="S10" value="6.297434324002687" />
-      <entry key="S30" value="6.743474357763572" />
-      <entry key="S60" value="6.868657730231077" />
-      <entry key="M2" value="6.9673234658385725" />
-      <entry key="M5" value="9.327958091830025" />
-      <entry key="M10" value="16.68821402416779" />
-      <entry key="M15" value="22.54645854119701" />
-      <entry key="M30" value="31.938776063751284" />
-      <entry key="H1" value="38.58430628420099" />
-      <entry key="H2" value="42.54399794618254" />
-      <entry key="H4" value="44.70624184033468" />
-      <entry key="D1" value="46.60824022807905" />
-      <entry key="W1" value="46.943797998485564" />
+      <entry key="MS100" value="1.0000019339742274" />
+      <entry key="MS500" value="1.0723744854008688" />
+      <entry key="S2" value="1.6582058022579786" />
+      <entry key="S5" value="2.2699119062551167" />
+      <entry key="S10" value="2.7661175685360955" />
+      <entry key="S30" value="3.434413523227138" />
+      <entry key="S60" value="3.78686343855873" />
+      <entry key="M2" value="4.896179368964548" />
+      <entry key="M5" value="10.417405829132207" />
+      <entry key="M10" value="19.73903277961465" />
+      <entry key="M15" value="27.406377423202876" />
+      <entry key="M30" value="41.313349792625885" />
+      <entry key="H1" value="52.42985597547432" />
+      <entry key="H2" value="59.55100939859727" />
+      <entry key="H4" value="63.59378382789141" />
+      <entry key="D1" value="67.23892967003167" />
+      <entry key="W1" value="67.89060178925044" />
     </decayedCancelled>
     <decayedSelected>
       <entry key="MS100" value="0.0" />
@@ -64,23 +62,23 @@
       <entry key="W1" value="0.0" />
     </decayedSelected>
     <decayedShown>
-      <entry key="MS100" value="1.1685128709301231" />
-      <entry key="MS500" value="2.6581876879343014" />
-      <entry key="S2" value="4.664090307928408" />
-      <entry key="S5" value="5.744217279997503" />
-      <entry key="S10" value="6.289431670125019" />
-      <entry key="S30" value="6.740523979834213" />
-      <entry key="S60" value="6.867141607799736" />
-      <entry key="M2" value="6.966544497464098" />
-      <entry key="M5" value="9.32736742899144" />
-      <entry key="M10" value="16.687483573035053" />
-      <entry key="M15" value="22.545741281784583" />
-      <entry key="M30" value="31.93823313712449" />
-      <entry key="H1" value="38.58396970370471" />
-      <entry key="H2" value="42.543810268885984" />
-      <entry key="H4" value="44.706142710177346" />
-      <entry key="D1" value="46.60822293077553" />
-      <entry key="W1" value="46.943795507896326" />
+      <entry key="MS100" value="0.8066433520259277" />
+      <entry key="MS500" value="1.027549672476649" />
+      <entry key="S2" value="1.6407099400647598" />
+      <entry key="S5" value="2.2592243592082943" />
+      <entry key="S10" value="2.757983467844252" />
+      <entry key="S30" value="3.4299295347576555" />
+      <entry key="S60" value="3.783779035299123" />
+      <entry key="M2" value="4.890352846589066" />
+      <entry key="M5" value="10.402275834810238" />
+      <entry key="M10" value="19.723294326546505" />
+      <entry key="M15" value="27.392821007393742" />
+      <entry key="M30" value="41.30451269068005" />
+      <entry key="H1" value="52.4247879349333" />
+      <entry key="H2" value="59.54829171281791" />
+      <entry key="H4" value="63.59237604994216" />
+      <entry key="D1" value="67.2386879685499" />
+      <entry key="W1" value="67.89056708355216" />
     </decayedShown>
   </component>
   <component name="ProjectColorInfo">{
@@ -92,27 +90,28 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent">{
-  &quot;keyToString&quot;: {
-    &quot;ModuleVcsDetector.initialDetectionPerformed&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.MCP Project settings loaded&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.typescript.service.memoryLimit.init&quot;: &quot;true&quot;,
-    &quot;codeWithMe.voiceChat.enabledByDefault&quot;: &quot;false&quot;,
-    &quot;com.intellij.ml.llm.matterhorn.ej.ui.settings.DefaultModelSelectionForGA.v1&quot;: &quot;true&quot;,
-    &quot;git-widget-placeholder&quot;: &quot;main&quot;,
-    &quot;junie.onboarding.icon.badge.shown&quot;: &quot;true&quot;,
-    &quot;kotlin-language-version-configured&quot;: &quot;true&quot;,
-    &quot;last_opened_file_path&quot;: &quot;/home/m_uvex/.config/hypr&quot;,
-    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
-    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
-    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
-    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
-    &quot;settings.editor.selected.configurable&quot;: &quot;preferences.pluginManager&quot;,
-    &quot;to.speed.mode.migration.done&quot;: &quot;true&quot;
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "ModuleVcsDetector.initialDetectionPerformed": "true",
+    "RunOnceActivity.MCP Project settings loaded": "true",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "RunOnceActivity.git.unshallow": "true",
+    "RunOnceActivity.typescript.service.memoryLimit.init": "true",
+    "codeWithMe.voiceChat.enabledByDefault": "false",
+    "com.intellij.ml.llm.matterhorn.ej.ui.settings.DefaultModelSelectionForGA.v1": "true",
+    "git-widget-placeholder": "main",
+    "junie.onboarding.icon.badge.shown": "true",
+    "kotlin-language-version-configured": "true",
+    "last_opened_file_path": "/home/m_uvex/.config/hypr",
+    "node.js.detected.package.eslint": "true",
+    "node.js.detected.package.tslint": "true",
+    "node.js.selected.package.eslint": "(autodetect)",
+    "node.js.selected.package.tslint": "(autodetect)",
+    "nodejs_package_manager_path": "npm",
+    "settings.editor.selected.configurable": "ml.llm.AcpAgentsConfigurable",
+    "to.speed.mode.migration.done": "true"
   }
-}</component>
+}]]></component>
   <component name="RunManager">
     <configuration default="true" type="PythonConfigurationType" factoryName="Python">
       <module name="nixos" />
@@ -188,6 +187,11 @@
   <component name="VcsManagerConfiguration">
     <MESSAGE value="fix: fixed end4-pC hopefully.&#10;remove: .gitignore-d .idea, commented out modrinth from gaming.nix (compiling takes too long)" />
     <MESSAGE value="fix: Fixed end4-pC, now it loads on top of ii!!!!" />
-    <option name="LAST_COMMIT_MESSAGE" value="fix: Fixed end4-pC, now it loads on top of ii!!!!" />
+    <MESSAGE value="In short, got a shit ton of shit done, in long...&#10;&#10;fix: Aded support for multi monitors&#10;fix: Added gnome keyring shit&#10;fix: Renamed to SpaceNIX&#10;feat: Declerative app configs (fish, kitty, hyprland tweaks)&#10;feat: New fish config with better looks and keybinds&#10;feat: Replaced cd with zoxide (aliased as cd), added fastfetch" />
+    <option name="LAST_COMMIT_MESSAGE" value="In short, got a shit ton of shit done, in long...&#10;&#10;fix: Aded support for multi monitors&#10;fix: Added gnome keyring shit&#10;fix: Renamed to SpaceNIX&#10;feat: Declerative app configs (fish, kitty, hyprland tweaks)&#10;feat: New fish config with better looks and keybinds&#10;feat: Replaced cd with zoxide (aliased as cd), added fastfetch" />
+  </component>
+  <component name="XSLT-Support.FileAssociations.UIState">
+    <expand />
+    <select />
   </component>
 </project>
