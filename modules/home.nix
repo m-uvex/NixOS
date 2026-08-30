@@ -33,6 +33,10 @@
 
       # Fish: Overwrites ~/.config/fish with standalone clean end-4 configs
       fish.mode = "overwrite";
+
+      # GTK 3 & GTK 4: Layers custom window translucency CSS into Matugen templates
+      "gtk-3.0".mode = "layer";
+      "gtk-4.0".mode = "layer";
     };
   };
 

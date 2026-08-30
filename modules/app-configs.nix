@@ -95,6 +95,37 @@ let
               fi
             fi
             echo "[SpaceNix] Layer: kitty -> $targetDir (included in kitty.conf)"
+          '' else if appName == "gtk-3.0" || appName == "gtk3" || appName == "gtk-4.0" || appName == "gtk4" then ''
+            gtkVer="${if appName == "gtk-3.0" || appName == "gtk3" then "gtk-3.0" else "gtk-4.0"}"
+            templateDir="$HOME/.config/matugen/templates/$gtkVer"
+            $DRY_RUN_CMD mkdir -p "$templateDir"
+            $DRY_RUN_CMD mkdir -p "${baseTarget}/${layerSubdir}"
+            $DRY_RUN_CMD cp -rf "${sourcePath}"/* "${baseTarget}/${layerSubdir}"/
+            $DRY_RUN_CMD chmod -R u+w "${baseTarget}/${layerSubdir}"
+
+            # Layer custom CSS / templates into Matugen template
+            for customFile in "${sourcePath}"/*; do
+              if [ -f "$customFile" ]; then
+                baseName=$(basename "$customFile")
+                mainTemplate="$templateDir/gtk.css"
+                if [ -f "$mainTemplate" ]; then
+                  marker="/* --- SpaceNix Layer: $baseName --- */"
+                  if ! grep -q "$marker" "$mainTemplate"; then
+                    if [ -z "$DRY_RUN_CMD" ]; then
+                      printf "\n\n%s\n" "$marker" >> "$mainTemplate"
+                      cat "$customFile" >> "$mainTemplate"
+                    fi
+                  else
+                    if [ -z "$DRY_RUN_CMD" ]; then
+                      sed -i "/\/\* --- SpaceNix Layer: $baseName --- \*\//,\$d" "$mainTemplate"
+                      printf "\n\n%s\n" "$marker" >> "$mainTemplate"
+                      cat "$customFile" >> "$mainTemplate"
+                    fi
+                  fi
+                fi
+              fi
+            done
+            echo "[SpaceNix] Layer: $gtkVer -> $templateDir/gtk.css"
           '' else ''
             targetDir="${baseTarget}/${layerSubdir}"
             $DRY_RUN_CMD mkdir -p "$targetDir"
