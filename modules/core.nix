@@ -27,6 +27,7 @@
   };
 
   # --- FILESYSTEM DRIVERS & CORE CLI PACKAGES ---
+  programs.nix-ld.enable = true;
   environment.systemPackages = with pkgs; [
     # Automount & Filesystem support
     udiskie

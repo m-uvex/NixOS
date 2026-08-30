@@ -23,7 +23,8 @@ if status is-interactive
     alias clear "printf '\033[2J\033[3J\033[1;1H'"
     alias celar "printf '\033[2J\033[3J\033[1;1H'"
     alias claer "printf '\033[2J\033[3J\033[1;1H'"
-    alias cd z
+    # alias cd z
+    zoxide init fish --cmd cd | source
     alias nano micro
     alias cat bat
     alias neofetch fastfetch
