@@ -1,5 +1,32 @@
 { pkgs, ... }:
 
+let
+  bibata-material-cursors = pkgs.stdenvNoCC.mkDerivation {
+    pname = "bibata-material-cursors";
+    version = "1.0.0";
+
+    src = pkgs.fetchurl {
+      url = "https://github.com/SakibShahariar/material-bibata-cursor/releases/download/v1.0.0/bibata-material-v1.0.0.tar.gz";
+      hash = "sha256-oNf/+xff0yko4P9H99eq+PDqx91sD9LHZ/CekQJWJTI=";
+    };
+
+    sourceRoot = "bibata-material-v1.0.0";
+
+    installPhase = ''
+      runHook preInstall
+      mkdir -p $out/share/icons
+      cp -r Bibata-Material-* $out/share/icons/
+      runHook postInstall
+    '';
+
+    meta = with pkgs.lib; {
+      description = "Material Design Bibata Cursor Theme Collection (28 variants)";
+      homepage = "https://github.com/SakibShahariar/material-bibata-cursor";
+      license = licenses.gpl3;
+      platforms = platforms.linux;
+    };
+  };
+in
 {
   # --- DISPLAY & DESKTOP MANAGERS ---
   services.xserver.enable = true;
@@ -8,7 +35,11 @@
   programs.hyprland.enable = true;
   programs.driftwm.enable = true;
   programs.dconf.enable = true;
-  environment.systemPackages = [ pkgs.nwg-displays ];
+  environment.systemPackages = [
+    pkgs.nwg-displays
+    pkgs.wlr-randr
+    bibata-material-cursors
+  ];
 
   # --- DESKTOP SERVICES & INTEGRATIONS ---
   services.geoclue2.enable = true;
