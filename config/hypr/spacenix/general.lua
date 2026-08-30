@@ -15,8 +15,8 @@ hl.config({
             passes = 3,
             brightness = 1,
             noise = 0.05,
-            contrast = 0.89,
-            vibrancy = 0.5,
+            contrast = 1,
+            vibrancy = 0,
             vibrancy_darkness = 0.5,
             popups = false,
             popups_ignorealpha = 0.6,
@@ -34,3 +34,12 @@ hl.config({
         swallow_regex = "(foot|kitty|allacritty|Alacritty)",
     },
 })
+
+-- nwg-displays output configuration (monitors & workspaces)
+if is_file_exists(HOME .. "/.config/hypr/monitors.lua") then
+    dofile(HOME .. "/.config/hypr/monitors.lua")
+end
+if is_file_exists(HOME .. "/.config/hypr/workspaces.lua") then
+    dofile(HOME .. "/.config/hypr/workspaces.lua")
+end
+
