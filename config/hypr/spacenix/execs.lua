@@ -1,4 +1,4 @@
--- SpaceNix Custom Hyprland Execs
+-- SpaceNix
 hl.on("hyprland.start", function ()
     -- Export environment to systemd and DBus
     hl.exec_cmd("systemctl --user import-environment WAYLAND_DISPLAY XDG_CURRENT_DESKTOP DISPLAY XDG_SESSION_TYPE XDG_SESSION_DESKTOP QT_QPA_PLATFORMTHEME")
