@@ -46,6 +46,7 @@ in
   services.upower.enable = true;
   services.gvfs.enable = true;
   services.gnome.gnome-keyring.enable = true;
+  services.gnome.gnome-online-accounts.enable = true;
   programs.seahorse.enable = true;
   security.pam.services.login.enableGnomeKeyring = true;
 
