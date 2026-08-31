@@ -4,6 +4,11 @@
   inputs = {
     nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
 
+    # Hardware Support Profiles
+    nixos-hardware = {
+      url = "github:NixOS/nixos-hardware/master";
+    };
+
     # Home Manager
     home-manager = {
       url = "github:nix-community/home-manager";
@@ -38,15 +43,16 @@
   outputs = { self, nixpkgs, home-manager, driftwm, ... }@inputs:
   let
     system = "x86_64-linux";
+    username = "m_uvex";
     pkgs = nixpkgs.legacyPackages.${system};
-    specialArgs = { inherit inputs; };
+    specialArgs = { inherit inputs username; };
 
     homeManagerModule = {
       home-manager.useGlobalPkgs = true;
       home-manager.useUserPackages = true;
       home-manager.backupFileExtension = "backup";
       home-manager.extraSpecialArgs = specialArgs;
-      home-manager.users.m_uvex = import ./modules/home.nix;
+      home-manager.users.${username} = import ./modules/home.nix;
     };
   in {
 

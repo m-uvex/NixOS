@@ -1,4 +1,4 @@
-{ pkgs, inputs, ... }:
+{ pkgs, inputs, username ? "m_uvex", ... }:
 
 {
   imports = [
@@ -6,7 +6,7 @@
   ];
 
   # --- ACCOUNTS ---
-  users.users."m_uvex" = {
+  users.users.${username} = {
     isNormalUser = true;
     description = "Musa Murad";
     extraGroups = [ "networkmanager" "wheel" "video" "audio" "storage" ];
@@ -26,7 +26,7 @@
       ExecStart = "${pkgs.udiskie}/bin/udiskie --automount --no-tray --no-notify";
       Restart = "always";
       RestartSec = 5;
-      User = "m_uvex";
+      User = username;
     };
   };
 

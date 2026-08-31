@@ -1,0 +1,43 @@
+window,
+window.background,
+.background,
+dialog,
+.dialog,
+viewport,
+scrolledwindow,
+textview,
+treeview,
+iconview,
+list,
+listbox,
+paned,
+notebook,
+stack,
+stacksidebar,
+popover.background,
+.menu,
+.context-menu {
+    background-color: alpha(@theme_bg_color, 0.25);
+}
+
+button,
+button *,
+entry,
+entry *,
+label,
+label *,
+image,
+image *,
+checkbutton,
+radiobutton,
+scale,
+slider,
+scrollbar,
+switch,
+progressbar,
+combobox,
+spinbutton,
+toolbar,
+headerbar {
+    opacity: 1;
+}

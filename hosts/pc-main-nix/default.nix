@@ -1,4 +1,4 @@
-{ config, pkgs, ... }:
+{ ... }:
 
 {
   imports = [
@@ -10,7 +10,7 @@
     ../../modules/desktop.nix
     ../../modules/apps.nix
     ../../modules/gaming.nix
-    ../../modules/remote-host.nix
+    ../../modules/remote-desktop/host.nix
     ../../modules/hardware/amd-cpu.nix
     ../../modules/hardware/nvidia-desktop.nix
   ];
