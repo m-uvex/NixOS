@@ -1,7 +1,7 @@
-{ pkgs, ... }:
+{ pkgs, lib, username ? "m_uvex", ... }:
 
 {
-environment.systemPackages = [ pkgs.moonlight-qt ];
+  environment.systemPackages = [ pkgs.moonlight-qt ];
 
   # Boot-menu profile: wakes PC and launches Moonlight
   specialisation."remote-kiosk".configuration = {
@@ -11,7 +11,7 @@ environment.systemPackages = [ pkgs.moonlight-qt ];
 
     services.cage = {
       enable = true;
-      user = "m_uvex";
+      user = username;
       program = "${pkgs.writeShellScript "kiosk-session" ''
         (sleep 2 && ${pkgs.openssh}/bin/ssh -o ConnectTimeout=5 -o StrictHostKeyChecking=no m_uvex@100.78.151.49 "${pkgs.wakeonlan}/bin/wakeonlan 00:11:22:33:44:55" || true) &
         exec ${pkgs.moonlight-qt}/bin/moonlight
