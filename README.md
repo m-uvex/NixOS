@@ -1,6 +1,8 @@
-# ❄️ SpaceNIX
+# ❄️ OrbitOS
 
-Declarative, flake-based NixOS configuration managing personal workstations, gaming rigs, and server nodes across a unified Tailscale mesh.
+Declarative, multi-host, multi-dots, feature-full, flake based NixOS configs.
+
+# (!) README NEEDS UPDATING
 
 ---
 
@@ -17,23 +19,6 @@ Declarative, flake-based NixOS configuration managing personal workstations, gam
 ## 📁 Repository Structure
 
 ```
-.
-├── flake.nix              # Flake inputs, outputs, and system definitions
-├── hosts/
-│   ├── lt-hp15-nix/       # Orion-specific config
-│   ├── pc-main-nix/       # Andromeda-specific config
-│   └── srv-c4030-nix/     # Lunar-specific config
-├── modules/
-│   ├── core.nix           # Users, SSH, auth, age-decryption, Tailscale & must-have cli tools
-│   ├── desktop.nix        # DEs, WMs, GUI stuff, Audio and whatnot
-│   ├── apps.nix           # Dev tools, productivity, Zen Browser, UI toolkits
-│   ├── gaming.nix         # Steam, Gamescope, Prism/Heroic, controller drivers
-│   ├── docker.nix         # Docker daemon & declarative OCI container stack # WIP, My server still runs on Ubuntu...
-│   └── remote-host.nix    # Sunshine streaming host & Wake-on-LAN udev rules
-└── secrets/
-    └── ssh.tar.age        # Passphrase-encrypted ~/.ssh archive bundle
-    
-
 .
 ├── assets
 │   └── Wallpapers
