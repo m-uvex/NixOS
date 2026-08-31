@@ -16,19 +16,23 @@
   # --- DISK MANAGEMENT & AUTOMOUNT (SERVER + DESKTOP) ---
   services.udisks2.enable = true;
   services.gvfs.enable = true;
+  services.devmon.enable = true;
 
-  # Headless automount daemon running at boot for all hosts
-  systemd.services.udiskie-automount = {
-    description = "Headless Removable Disk Automounter";
-    wantedBy = [ "multi-user.target" ];
-    after = [ "udisks2.service" ];
-    serviceConfig = {
-      ExecStart = "${pkgs.udiskie}/bin/udiskie --automount --no-tray --no-notify";
-      Restart = "always";
-      RestartSec = 5;
-      User = username;
-    };
-  };
+  # Allow wheel group users and automount services to mount/eject disks without password prompts
+  security.polkit.enable = true;
+  security.polkit.extraConfig = ''
+    polkit.addRule(function(action, subject) {
+      if ((action.id == "org.freedesktop.udisks2.filesystem-mount" ||
+           action.id == "org.freedesktop.udisks2.filesystem-mount-system" ||
+           action.id == "org.freedesktop.udisks2.filesystem-mount-other-seat" ||
+           action.id == "org.freedesktop.udisks2.encrypted-unlock" ||
+           action.id == "org.freedesktop.udisks2.eject-media" ||
+           action.id == "org.freedesktop.udisks2.power-off-drive") &&
+          subject.isInGroup("wheel")) {
+        return polkit.Result.YES;
+      }
+    });
+  '';
 
   # --- FILESYSTEM DRIVERS & CORE CLI PACKAGES ---
   programs.nix-ld.enable = true;
@@ -38,6 +42,10 @@
     ntfs3g
     exfatprogs
     dosfstools
+    cifs-utils
+    sshfs
+    davfs2
+    rclone
 
     # CLI tools
     git
