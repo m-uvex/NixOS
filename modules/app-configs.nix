@@ -40,29 +40,38 @@ let
         default = null;
         description = "Subdirectory used when layering. Defaults to 'custom' (hypr), 'conf.d' (fish), 'spacenix' (kitty), or profile name.";
       };
+
+      extraActivation = mkOption {
+        type = types.lines;
+        default = "";
+        description = "Custom post-copy bash commands for this application.";
+      };
     };
   });
 
   # Build bash activation snippets for each enabled application
   buildAppScript = appName: appCfg:
     let
-      sourcePath = if appCfg.source != null then appCfg.source else (cfg.configDir + "/${appName}/${cfg.profile}");
+      profilePath = cfg.configDir + "/${appName}/${cfg.profile}";
+      directPath = cfg.configDir + "/${appName}";
+      sourcePath =
+        if appCfg.source != null then appCfg.source
+        else if cfg.profile != "" && builtins.pathExists profilePath then profilePath
+        else directPath;
       baseTarget = if appCfg.targetDir != null then appCfg.targetDir else "$HOME/.config/${appName}";
       
       # Determine default layer directory per application
-      defaultLayerSubdir = 
-        if appName == "hypr" then "custom"
-        else if appName == "fish" then "conf.d"
-        else if appName == "kitty" then "spacenix"
-        else cfg.profile;
+      defaultLayerSubdir = cfg.profile;
         
       layerSubdir = if appCfg.layerTarget != null then appCfg.layerTarget else defaultLayerSubdir;
     in
     ''
       # --- App: ${appName} (Mode: ${appCfg.mode}) ---
       if [ -d "${sourcePath}" ]; then
+        baseTarget="${baseTarget}"
+        layerSubdir="${layerSubdir}"
         ${if appCfg.mode == "overwrite" then ''
-          targetDir="${baseTarget}"
+          targetDir="$baseTarget"
           $DRY_RUN_CMD mkdir -p "$targetDir"
           
           # Clean up any existing symlinks or files that match source files to prevent write collisions
@@ -79,61 +88,13 @@ let
           $DRY_RUN_CMD chmod -R u+w "$targetDir"
           echo "[SpaceNix] Overwrite: ${appName} -> $targetDir"
         '' else ''
-          ${if appName == "kitty" then ''
-            targetDir="${baseTarget}/${layerSubdir}"
-            $DRY_RUN_CMD mkdir -p "$targetDir"
-            $DRY_RUN_CMD cp -rf "${sourcePath}"/* "$targetDir"/
-            $DRY_RUN_CMD chmod -R u+w "$targetDir"
-            
-            # Ensure include directive is present in main kitty.conf
-            mainConf="${baseTarget}/kitty.conf"
-            if [ -f "$mainConf" ]; then
-              if ! grep -q "include ./${layerSubdir}/kitty.conf" "$mainConf" && ! grep -q "include ${layerSubdir}/kitty.conf" "$mainConf"; then
-                if [ -z "$DRY_RUN_CMD" ]; then
-                  printf "\n# SpaceNix overrides\ninclude ./${layerSubdir}/kitty.conf\n" >> "$mainConf"
-                fi
-              fi
-            fi
-            echo "[SpaceNix] Layer: kitty -> $targetDir (included in kitty.conf)"
-          '' else if appName == "gtk-3.0" || appName == "gtk3" || appName == "gtk-4.0" || appName == "gtk4" then ''
-            gtkVer="${if appName == "gtk-3.0" || appName == "gtk3" then "gtk-3.0" else "gtk-4.0"}"
-            templateDir="$HOME/.config/matugen/templates/$gtkVer"
-            $DRY_RUN_CMD mkdir -p "$templateDir"
-            $DRY_RUN_CMD mkdir -p "${baseTarget}/${layerSubdir}"
-            $DRY_RUN_CMD cp -rf "${sourcePath}"/* "${baseTarget}/${layerSubdir}"/
-            $DRY_RUN_CMD chmod -R u+w "${baseTarget}/${layerSubdir}"
-
-            # Layer custom CSS / templates into Matugen template
-            for customFile in "${sourcePath}"/*; do
-              if [ -f "$customFile" ]; then
-                baseName=$(basename "$customFile")
-                mainTemplate="$templateDir/gtk.css"
-                if [ -f "$mainTemplate" ]; then
-                  marker="/* --- SpaceNix Layer: $baseName --- */"
-                  if ! grep -q "$marker" "$mainTemplate"; then
-                    if [ -z "$DRY_RUN_CMD" ]; then
-                      printf "\n\n%s\n" "$marker" >> "$mainTemplate"
-                      cat "$customFile" >> "$mainTemplate"
-                    fi
-                  else
-                    if [ -z "$DRY_RUN_CMD" ]; then
-                      sed -i "/\/\* --- SpaceNix Layer: $baseName --- \*\//,\$d" "$mainTemplate"
-                      printf "\n\n%s\n" "$marker" >> "$mainTemplate"
-                      cat "$customFile" >> "$mainTemplate"
-                    fi
-                  fi
-                fi
-              fi
-            done
-            echo "[SpaceNix] Layer: $gtkVer -> $templateDir/gtk.css"
-          '' else ''
-            targetDir="${baseTarget}/${layerSubdir}"
-            $DRY_RUN_CMD mkdir -p "$targetDir"
-            $DRY_RUN_CMD cp -rf "${sourcePath}"/* "$targetDir"/
-            $DRY_RUN_CMD chmod -R u+w "$targetDir"
-            echo "[SpaceNix] Layer: ${appName} -> $targetDir"
-          ''}
+          targetDir="${if layerSubdir != "" then "$baseTarget/$layerSubdir" else "$baseTarget"}"
+          $DRY_RUN_CMD mkdir -p "$targetDir"
+          $DRY_RUN_CMD cp -rf "${sourcePath}"/* "$targetDir"/
+          $DRY_RUN_CMD chmod -R u+w "$targetDir"
+          echo "[SpaceNix] Layer: ${appName} -> $targetDir"
         ''}
+        ${appCfg.extraActivation}
       fi
     '';
 
@@ -141,6 +102,10 @@ let
   activationScripts = concatStringsSep "\n" (mapAttrsToList buildAppScript enabledApps);
 
 in {
+  imports = [
+    ./apps
+  ];
+
   options.spacenix = {
     enable = mkEnableOption "SpaceNix modular configuration management";
 
@@ -164,13 +129,6 @@ in {
   };
 
   config = mkIf cfg.enable {
-    # Automatically disable upstream illogical-impulse modules when in overwrite mode
-    programs.illogical-impulse.dotfiles = {
-      fish.enable = mkDefault (if (cfg.apps ? fish && cfg.apps.fish.enable && cfg.apps.fish.mode == "overwrite") then false else true);
-      kitty.enable = mkDefault (if (cfg.apps ? kitty && cfg.apps.kitty.enable && cfg.apps.kitty.mode == "overwrite") then false else true);
-      starship.enable = mkDefault (if (cfg.apps ? starship && cfg.apps.starship.enable && cfg.apps.starship.mode == "overwrite") then false else true);
-    };
-
     home.activation.applySpaceNixConfigs = lib.hm.dag.entryAfter [ "copyIllogicalImpulseConfigs" ] ''
       echo "=== Applying SpaceNix Modular Configurations ==="
       ${activationScripts}

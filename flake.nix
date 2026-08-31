@@ -38,15 +38,16 @@
   outputs = { self, nixpkgs, home-manager, driftwm, ... }@inputs:
   let
     system = "x86_64-linux";
+    username = "m_uvex";
     pkgs = nixpkgs.legacyPackages.${system};
-    specialArgs = { inherit inputs; };
+    specialArgs = { inherit inputs username; };
 
     homeManagerModule = {
       home-manager.useGlobalPkgs = true;
       home-manager.useUserPackages = true;
       home-manager.backupFileExtension = "backup";
       home-manager.extraSpecialArgs = specialArgs;
-      home-manager.users.m_uvex = import ./modules/home.nix;
+      home-manager.users.${username} = import ./modules/home.nix;
     };
   in {
 

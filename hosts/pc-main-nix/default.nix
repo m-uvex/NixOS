@@ -10,7 +10,7 @@
     ../../modules/desktop.nix
     ../../modules/apps.nix
     ../../modules/gaming.nix
-    ../../modules/remote-host.nix
+    ../../modules/remote-desktop/host.nix
   ];
 
   networking.hostName = "pc-main-nix";
