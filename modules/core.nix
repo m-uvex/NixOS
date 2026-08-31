@@ -1,6 +1,10 @@
 { pkgs, inputs, ... }:
 
 {
+  imports = [
+    ./hardware/default.nix
+  ];
+
   # --- ACCOUNTS ---
   users.users."m_uvex" = {
     isNormalUser = true;

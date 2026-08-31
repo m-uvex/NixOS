@@ -4,6 +4,8 @@
   imports = [
     ../../modules/core.nix
     ../../modules/docker.nix
+    ../../modules/hardware/intel-cpu.nix
+    ../../modules/hardware/intel-integrated.nix
     # ./hardware-configuration.nix
   ];
 

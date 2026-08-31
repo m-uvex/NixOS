@@ -28,4 +28,8 @@
 
   nixpkgs.hostPlatform = lib.mkDefault "x86_64-linux";
   hardware.cpu.intel.updateMicrocode = lib.mkDefault config.hardware.enableRedistributableFirmware;
+
+  # Hybrid GPU PCI Bus IDs
+  hardware.nvidia.prime.intelBusId = lib.mkDefault "PCI:0:2:0";
+  hardware.nvidia.prime.nvidiaBusId = lib.mkDefault "PCI:2:0:0";
 }

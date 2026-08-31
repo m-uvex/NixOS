@@ -7,6 +7,9 @@
     ../../modules/desktop.nix
     ../../modules/apps.nix
     ../../modules/gaming.nix
+    ../../modules/hardware/intel-cpu.nix
+    ../../modules/hardware/intel-integrated.nix
+    ../../modules/hardware/nvidia-hybrid.nix
   ];
 
   networking.hostName = "lt-hp15-nix";

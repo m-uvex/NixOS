@@ -11,18 +11,10 @@
     ../../modules/apps.nix
     ../../modules/gaming.nix
     ../../modules/remote-host.nix
+    ../../modules/hardware/amd-cpu.nix
+    ../../modules/hardware/nvidia-desktop.nix
   ];
 
   networking.hostName = "pc-main-nix";
   system.stateVersion = "24.05";
-
-  # NVIDIA 50-series drivers
-  services.xserver.videoDrivers = [ "nvidia" ];
-  hardware.nvidia = {
-    modesetting.enable = true;
-    powerManagement.enable = false;
-    open = true;
-    nvidiaSettings = true;
-    package = config.boot.kernelPackages.nvidiaPackages.latest;
-  };
 }
