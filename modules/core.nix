@@ -3,6 +3,7 @@
 {
   imports = [
     ./hardware/default.nix
+    ./rebuild.nix
   ];
 
   # --- ACCOUNTS ---
@@ -64,12 +65,6 @@
     socat
     tailscale
     wakeonlan
-
-    # Rebuild helper script
-    (writeShellScriptBin "rebuild" ''
-      HOST="''${1:-$(hostname)}"
-      exec sudo nixos-rebuild switch --flake "/etc/nixos#$HOST" "''${@:2}"
-    '')
   ];
 
 
@@ -92,10 +87,15 @@
   system.autoUpgrade.flake = inputs.self.outPath;
   nix.settings.auto-optimise-store = true;
   nix.settings.experimental-features = [ "nix-command" "flakes" ];
-  nix.gc = {
-    automatic = true;
-    dates = "weekly";
-    options = "--delete-older-than 7d";
+
+  # --- NIX HELPER (NH) ---
+  programs.nh = {
+    enable = true;
+    flake = "/etc/nixos";
+    clean = {
+      enable = true;
+      extraArgs = "--keep 5 --keep-since 7d";
+    };
   };
 
   # --- NETWORKING BASE ---
