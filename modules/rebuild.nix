@@ -141,6 +141,12 @@ EOF
       sudo ${pkgs.nix}/bin/nix flake update --flake /etc/nixos
     fi
 
+    # Clean up stale Home Manager .backup files that could block generation activation
+    TARGET_USER="''${SUDO_USER:-$USER}"
+    TARGET_HOME=$(getent passwd "$TARGET_USER" 2>/dev/null | cut -d: -f6)
+    TARGET_HOME="''${TARGET_HOME:-/home/$TARGET_USER}"
+    rm -f "$TARGET_HOME"/.config/gtk-3.0/*.backup "$TARGET_HOME"/.config/gtk-4.0/*.backup "$TARGET_HOME"/.config/matugen/templates/*/*.backup "$TARGET_HOME"/.config/fish/*.backup 2>/dev/null || true
+
     echo "==> Building and applying configuration ($ACTION) for: $HOST..."
     ${pkgs.nh}/bin/nh os "$ACTION" /etc/nixos -H "$HOST" "''${EXTRA_ARGS[@]}"
 
