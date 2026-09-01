@@ -12,6 +12,44 @@
     description = "Musa Murad";
     extraGroups = [ "networkmanager" "wheel" "video" "audio" "storage" ];
     hashedPassword = "$6$tFhMrTUbXvCtUK2O$VyQs7xSfEOGBPZlb8UZPOZEA6tr2ZR5ixEvbO1wwhN6iGb3kmgvTCVDbGmAx1u33FSomD4wWIQFw.ly3yGj141";
+    openssh.authorizedKeys.keys = [
+      # Shared SSH authorized keys for m_uvex across all hosts
+      "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIK+Wl/P/x5uB5y442bA5rFw3e1k6FpY2FjYp9/m_uvex m_uvex"
+    ];
+  };
+
+  # --- SSH SERVER & CLIENT INFRASTRUCTURE ---
+  services.openssh = {
+    enable = true;
+    settings = {
+      PasswordAuthentication = false;
+      PermitRootLogin = "no";
+      KbdInteractiveAuthentication = false;
+    };
+    openFirewall = true;
+  };
+
+  programs.ssh = {
+    extraConfig = ''
+      Host *
+        IdentityFile ~/.ssh/id_ed25519
+        IdentityFile ~/.ssh/m_uvex
+
+      Host lunar
+        HostName 100.78.151.49
+        User ${username}
+        ForwardAgent yes
+
+      Host andromeda
+        HostName pc-main-nix
+        User ${username}
+        ForwardAgent yes
+
+      Host orion
+        HostName lt-hp15-nix
+        User ${username}
+        ForwardAgent yes
+    '';
   };
 
   # --- DISK MANAGEMENT & AUTOMOUNT (SERVER + DESKTOP) ---
@@ -106,8 +144,8 @@
   # --- SHELLS ---
   programs.fish.enable = true;
 
-  # WoL alias for pc-main-nix (wake-pc)
+  # WoL alias for pc-main-nix (wake-pc via Lunar)
   environment.shellAliases = {
-    wake-pc = "ssh m_uvex@100.78.151.49 'wakeonlan 00:11:22:33:44:55'";
+    wake-pc = "ssh lunar 'wakeonlan 00:11:22:33:44:55'";
   };
 }
