@@ -19,9 +19,10 @@
     # PRIME Offload configuration
     prime = {
       offload = {
-        enable = lib.mkDefault true;
-        enableOffloadCmd = lib.mkDefault true; # Provides `nvidia-offload <app>` command
+        enable = lib.mkForce true;
+        enableOffloadCmd = lib.mkForce true; # Provides `nvidia-offload <app>` command
       };
+      sync.enable = lib.mkForce false;
       # Sensible default bus IDs (can be customized in hardware-configuration.nix)
       intelBusId = lib.mkDefault "PCI:0:2:0";
       nvidiaBusId = lib.mkDefault "PCI:2:0:0";
