@@ -2,8 +2,6 @@
 
 Declarative, multi-host, multi-dots, feature-full, flake based NixOS configs.
 
-# (!) README NEEDS UPDATING
-
 ---
 
 ## 🖥️ Hosts
@@ -20,45 +18,51 @@ Declarative, multi-host, multi-dots, feature-full, flake based NixOS configs.
 
 ```
 .
-├── assets
-│   └── Wallpapers
-│       ├── Dark...
-│       └── Light...
-├── flake.nix
-├── hosts
-│   ├── lt-hp15-nix
-│   │   ├── default.nix
-│   │   └── hardware-configuration.nix
-│   ├── pc-main-nix
-│   │   └── default.nix
-│   └── srv-c4030-nix
-│       └── default.nix
-├── modules
-│   ├── apps.nix
-│   ├── core.nix
-│   ├── desktop.nix
-│   ├── docker.nix
-│   ├── gaming.nix
-│   ├── home.nix
-│   └── remote-host.nix
+├── config/                 # Modular user dotfiles & app configurations
+│   ├── cursor/             # Dynamic wallpaper-matching cursor generator
+│   ├── fish/               # Fish shell configuration & environment
+│   ├── gtk-3.0/            # GTK 3 custom stylesheets
+│   ├── gtk-4.0/            # GTK 4 custom stylesheets
+│   ├── hypr/               # Hyprland lua configurations & rules
+│   └── kitty/              # Kitty terminal configuration
+├── flake.nix               # Flake inputs, outputs, and system definitions
+├── hosts/                  # Per-host NixOS machine definitions
+│   ├── lt-hp15-nix/        # Orion (Laptop)
+│   ├── pc-main-nix/        # Andromeda (Main PC)
+│   └── srv-c4030-nix/      # Lunar (Server & WoL Relay)
+├── modules/                # Modular system & user configurations
+│   ├── app-configs/        # Per-app integration hooks (fish, gtk, hypr, kitty)
+│   ├── app-configs.nix     # Modular app layer & overwrite engine
+│   ├── apps.nix            # System-wide GUI apps and tools
+│   ├── assets/             # Wallpapers and media
+│   ├── core.nix            # Base system, users, OpenSSH, and networking
+│   ├── desktop.nix         # Hyprland, audio, display managers
+│   ├── docker.nix          # Docker containers (TODO)
+│   ├── gaming.nix          # Steam, GameMode, Minecraft, controller drivers
+│   ├── hardware/           # Modular CPU & GPU hardware profiles
+│   ├── home.nix            # Home Manager environment & themes
+│   ├── rebuild.nix         # OrbitOS rebuild CLI & SSH key tools
+│   └── remote-desktop/     # Sunshine streaming host & Moonlight client
 ├── README.md
-└── secrets
-    └── ssh.tar.age
+└── secrets/
+    └── ssh.tar.age         # Passphrase-encrypted ~/.ssh archive bundle
 ```
 
 ---
 
 ## ✨ Key Features
 
-* **Secure Masterized SSH:** `~/.ssh` is encrypted and stored inside the repo. On a first-time boot it'd copy over the same dir using a passphrase, allowing all my devices to securely share the same SSH keys and always able to access one another.
-* **Remote Kiosk Specialisation:** Selectable boot-entry on the laptop (`remote-kiosk`) boots directly into moonlight inside a minimal cage wayland compositor, sending a background Wake-on-LAN magic packet over Tailscale via Lunar to Andromeda.
-* **Tailscale WoL Relay:** Built-in alias and scripts allowing remote devices to trigger Wake-on-LAN on Andromeda via the always-on Lunar server node.
-* **One config for all:** This single repo is made to work for every single one of my machines in the exact way i want it to. No need to spend hours configuring a new server, a VM, VPS, PC, installation or whatever. It's all one single repo!
+* **Dynamic material cursors:** Cursors are dynamically colored based on the wallpaper, allowing for an overhauled and visually consistent experience.
+* **Masterized SSH across devices:** `~/.ssh` is encrypted with age passphrase and committed. On first rebuild, it extracts all keys using the passphrase.
+* **Visual Rebuild Tool:** Custom `rebuild` CLI tool for quick and easy system rebuild with visual package diffs, flake updating (`rebuild update`), SSH key syncing and more.
+* **Remote Kiosk Specialisation:** Selectable boot-entry on Orion (`remote-kiosk`) boots directly into Moonlight sending a background Wake-on-LAN magic packet via Lunar to Andromeda.
+* **Tailscale WoL Relay:** Built-in alias (`wake-pc`) and scripts allowing remote devices to trigger Wake-on-LAN on Andromeda via the always-on Lunar server node.
+* **One config for all:** Single modular repository configuring desktops, laptops and servers seamlessly.
 ---
 
 ## 🚀 Quick Install (Fresh System)
 
-! It is advised to fork this repo into your own and edit the config as you like, especially the user block as the password is hashed and with this exact config you won't be able to get in!
+(!) It is advised to fork this repo into your own and edit the config as you like, especially the user as the password is hashed and with this exact config you won't be able to get in!
 
 ### 1. Install NixOS
 
@@ -74,17 +78,14 @@ Declarative, multi-host, multi-dots, feature-full, flake based NixOS configs.
 # Get into a temporary shell with git installed
 nix-shell -p git
 
-# Generate hardware profile
-sudo nixos-generate-config --root /mnt
-
 # clone repo
 sudo git clone https://github.com/m-uvex/NixOS.git /etc/nixos
 
-# Move generated hardware config to target host (e.g., lt-hp15-nix)
-sudo mv /etc/nixos/hardware-configuration.nix /etc/nixos/hosts/lt-hp15-nix/
+# Generate hardware profile into host (e.g. lt-hp15-nix)
+sudo nixos-generate-config --root /etc/nixos/hosts/lt-hp15-nix/
 ```
 ### 3. Build
-# PLEASE EDIT THE CONFIG BEFORE GENERATING! with my exact config, you won't be able to log in or do much of anything because of the hashed password. It is advised that you fork the repo into your own first!
+***PLEASE EDIT THE CONFIG BEFORE GENERATING! with my exact config, you won't be able to log in or do much of anything because of the hashed password. It is advised that you fork the repo into your own first!***
 
 ```bash
 cd /etc/nixos
@@ -94,3 +95,17 @@ sudo nixos-install --flake .#lt-hp15-nix
 
 sudo reboot
 ```
+
+Note: After first rebuild, you can simply use the "rebuild" command. Run `rebuild -h` for more info.
+
+
+## Have issues or question?
+OrbitOS is still in alpha stages and is full of bugs but I'm making it better each day. If you want to report a bug or ask a question, feel free to DM me on;
+
+Discord:    m_uvex
+
+Instagram:  m.uvex
+
+Signal:     m_uvex.01
+
+Note: I'll be setting up proper github issues and a discord server soon but in the meantime js DM me on one of thoseissues st

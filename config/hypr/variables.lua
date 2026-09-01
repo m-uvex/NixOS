@@ -1,4 +1,4 @@
--- SpaceNix
+-- OrbitOS
 -- Set active quickshell configuration to end4-pC
 hl.env("qsConfig", "end4-pC")
 

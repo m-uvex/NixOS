@@ -56,7 +56,7 @@ let
 
     show_help() {
       cat << 'EOF'
-SpaceNIX Rebuilder
+OrbitOS Rebuilder
 
 Usage: rebuild [ACTION] [HOST] [update|--update|-u] [OPTIONS...]
 

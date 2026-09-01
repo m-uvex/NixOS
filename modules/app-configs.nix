@@ -3,14 +3,14 @@
 with lib;
 
 let
-  cfg = config.spacenix;
+  cfg = config.orbitos;
 
   appModule = types.submodule ({ name, ... }: {
     options = {
       enable = mkOption {
         type = types.bool;
         default = true;
-        description = "Whether to enable SpaceNix configuration management for this app.";
+        description = "Whether to enable OrbitOS configuration management for this app.";
       };
 
       mode = mkOption {
@@ -38,7 +38,7 @@ let
       layerTarget = mkOption {
         type = types.nullOr types.str;
         default = null;
-        description = "Subdirectory used when layering. Defaults to 'custom' (hypr), 'conf.d' (fish), 'spacenix' (kitty), or profile name.";
+        description = "Subdirectory used when layering. Defaults to 'custom' (hypr), 'conf.d' (fish), 'orbitos' (kitty), or profile name.";
       };
 
       extraActivation = mkOption {
@@ -86,13 +86,13 @@ let
           
           $DRY_RUN_CMD cp -rf "${sourcePath}"/* "$targetDir"/
           $DRY_RUN_CMD chmod -R u+w "$targetDir"
-          echo "[SpaceNix] Overwrite: ${appName} -> $targetDir"
+          echo "[OrbitOS] Overwrite: ${appName} -> $targetDir"
         '' else ''
           targetDir="${if layerSubdir != "" then "$baseTarget/$layerSubdir" else "$baseTarget"}"
           $DRY_RUN_CMD mkdir -p "$targetDir"
           $DRY_RUN_CMD cp -rf "${sourcePath}"/* "$targetDir"/
           $DRY_RUN_CMD chmod -R u+w "$targetDir"
-          echo "[SpaceNix] Layer: ${appName} -> $targetDir"
+          echo "[OrbitOS] Layer: ${appName} -> $targetDir"
         ''}
         ${appCfg.extraActivation}
       fi
@@ -103,11 +103,11 @@ let
 
 in {
   imports = [
-    ./apps
+    ./app-configs
   ];
 
-  options.spacenix = {
-    enable = mkEnableOption "SpaceNix modular configuration management";
+  options.orbitos = {
+    enable = mkEnableOption "OrbitOS modular configuration management";
 
     configDir = mkOption {
       type = types.path;
@@ -117,20 +117,20 @@ in {
 
     profile = mkOption {
       type = types.str;
-      default = "spacenix";
+      default = "orbitos";
       description = "Active preset/profile subfolder name inside each app's config directory.";
     };
 
     apps = mkOption {
       type = types.attrsOf appModule;
       default = {};
-      description = "Declarative per-application SpaceNix configurations.";
+      description = "Declarative per-application OrbitOS configurations.";
     };
   };
 
   config = mkIf cfg.enable {
-    home.activation.applySpaceNixConfigs = lib.hm.dag.entryAfter [ "copyIllogicalImpulseConfigs" ] ''
-      echo "=== Applying SpaceNix Modular Configurations ==="
+    home.activation.applyOrbitOSConfigs = lib.hm.dag.entryAfter [ "copyIllogicalImpulseConfigs" ] ''
+      echo "=== Applying OrbitOS Modular Configurations ==="
       ${activationScripts}
     '';
   };

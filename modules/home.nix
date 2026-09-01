@@ -18,10 +18,10 @@
     qsConfig = "end4-pC";
   };
 
-  # --- SPACENIX MODULAR CONFIGURATION MANAGER ---
-  spacenix = {
+  # --- ORBITOS MODULAR CONFIGURATION MANAGER ---
+  orbitos = {
     enable = true;
-    profile = "spacenix";
+    profile = "orbitos";
   };
 
   # --- DESKTOP AUTOMOUNT (USER SESSION) ---

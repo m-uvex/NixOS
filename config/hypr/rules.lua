@@ -1,4 +1,4 @@
--- SpaceNix
+-- OrbitOS
 -- Enable blur for xwayland context menus
 hl.window_rule({match = {class = "^()$", title = "^()$" }, no_blur = false })
 
