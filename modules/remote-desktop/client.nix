@@ -5,15 +5,15 @@
 
   # Boot-menu profile: wakes PC and launches Moonlight
   specialisation."remote-kiosk".configuration = {
-    services.xserver.displayManager.gdm.enable = lib.mkForce false;
-    services.xserver.desktopManager.gnome.enable = lib.mkForce false;
+    services.displayManager.gdm.enable = lib.mkForce false;
+    services.desktopManager.gnome.enable = lib.mkForce false;
     programs.hyprland.enable = lib.mkForce false;
 
     services.cage = {
       enable = true;
       user = username;
       program = "${pkgs.writeShellScript "kiosk-session" ''
-        (sleep 2 && ${pkgs.openssh}/bin/ssh -o ConnectTimeout=5 -o StrictHostKeyChecking=no m_uvex@100.78.151.49 "${pkgs.wakeonlan}/bin/wakeonlan 00:11:22:33:44:55" || true) &
+        (sleep 2 && ${pkgs.openssh}/bin/ssh -o ConnectTimeout=5 -o StrictHostKeyChecking=no lunar "${pkgs.wakeonlan}/bin/wakeonlan 00:11:22:33:44:55" || true) &
         exec ${pkgs.moonlight-qt}/bin/moonlight
       ''}";
     };
