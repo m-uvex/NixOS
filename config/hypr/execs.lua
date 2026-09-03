@@ -9,5 +9,5 @@ hl.on("hyprland.start", function ()
     hl.exec_cmd("systemctl --user restart xdg-desktop-portal-hyprland xdg-desktop-portal-gtk xdg-desktop-portal")
 
     -- Initialize Material cursor based on active wallpaper palette
-    hl.exec_cmd("~/.config/quickshell/ii/scripts/colors/cursor/cursor-material-set-color.sh")
+    hl.exec_cmd("~/.config/cursor/cursor-material-set-color.sh")
 end)

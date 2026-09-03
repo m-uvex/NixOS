@@ -27,13 +27,16 @@ else
 
     if [[ "$target_input" =~ ^#?[A-Fa-f0-9]{6}$ ]]; then
         hex_color="$target_input"
+    elif [[ -f "$COLOR_TXT" && -s "$COLOR_TXT" ]]; then
+        hex_color=$(tr -d '[:space:]"' < "$COLOR_TXT")
     elif [[ -f "$COLORS_JSON" ]] && command -v jq >/dev/null 2>&1; then
-        # Prefer inverse_primary (Tone 80 pastel accent in Material 3) or primary
-        hex_color=$(jq -r '.inverse_primary // .primary_fixed_dim // .primary // empty' "$COLORS_JSON" 2>/dev/null || echo "")
+        hex_color=$(jq -r '.primary // .inverse_primary // .primary_fixed_dim // empty' "$COLORS_JSON" 2>/dev/null || echo "")
     fi
 
-    if [[ -z "$hex_color" && -f "$COLOR_TXT" ]]; then
-        hex_color=$(tr -d '[:space:]"' < "$COLOR_TXT")
+    if [[ -z "$hex_color" || ! "$hex_color" =~ ^#?[A-Fa-f0-9]{6}$ ]]; then
+        if [[ -f "$COLORS_JSON" ]] && command -v jq >/dev/null 2>&1; then
+            hex_color=$(jq -r '.inverse_primary // .primary // empty' "$COLORS_JSON" 2>/dev/null || echo "")
+        fi
     fi
 
     if [[ -z "$hex_color" || ! "$hex_color" =~ ^#?[A-Fa-f0-9]{6}$ ]]; then
@@ -45,8 +48,10 @@ else
 
     # Match to closest theme variant via CIEDE2000
     if [[ -f "$COLOR_MATCH_PY" && -f "$THEMES_JSON" ]]; then
-        nearest_variant=$(python3 "$COLOR_MATCH_PY" "$hex_color" "$THEMES_JSON")
-    else
+        nearest_variant=$(python3 "$COLOR_MATCH_PY" "$hex_color" "$THEMES_JSON" 2>/dev/null | tr -d '[:space:]' || echo "")
+    fi
+
+    if [[ -z "$nearest_variant" ]]; then
         nearest_variant="Lilac"
     fi
 fi

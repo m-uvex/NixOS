@@ -38,8 +38,14 @@ hl.config({
 -- nwg-displays output configuration (monitors & workspaces)
 if is_file_exists(HOME .. "/.config/hypr/monitors.lua") then
     dofile(HOME .. "/.config/hypr/monitors.lua")
+elseif is_file_exists(HOME .. "/.config/hypr/custom/monitors.lua") then
+    dofile(HOME .. "/.config/hypr/custom/monitors.lua")
 end
+
 if is_file_exists(HOME .. "/.config/hypr/workspaces.lua") then
     dofile(HOME .. "/.config/hypr/workspaces.lua")
+elseif is_file_exists(HOME .. "/.config/hypr/custom/workspaces.lua") then
+    dofile(HOME .. "/.config/hypr/custom/workspaces.lua")
 end
+
 

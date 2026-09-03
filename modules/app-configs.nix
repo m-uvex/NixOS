@@ -129,8 +129,43 @@ in {
   };
 
   config = mkIf cfg.enable {
+    # 1. Preserve dynamic runtime configs (e.g. nwg-displays outputs) before illogical-impulse wipes ~/.config/hypr
+    home.activation.backupOrbitOSDynamicConfigs = lib.hm.dag.entryBefore [ "copyIllogicalImpulseConfigs" ] ''
+      PRESERVE_DIR="$HOME/.local/state/orbitos/preserved"
+      mkdir -p "$PRESERVE_DIR/hypr"
+      
+      if [ -f "$HOME/.config/hypr/monitors.conf" ]; then
+        cp -f "$HOME/.config/hypr/monitors.conf" "$PRESERVE_DIR/hypr/"
+      fi
+      if [ -f "$HOME/.config/hypr/monitors.lua" ]; then
+        cp -f "$HOME/.config/hypr/monitors.lua" "$PRESERVE_DIR/hypr/"
+      fi
+      if [ -f "$HOME/.config/hypr/workspaces.conf" ]; then
+        cp -f "$HOME/.config/hypr/workspaces.conf" "$PRESERVE_DIR/hypr/"
+      fi
+      if [ -f "$HOME/.config/hypr/workspaces.lua" ]; then
+        cp -f "$HOME/.config/hypr/workspaces.lua" "$PRESERVE_DIR/hypr/"
+      fi
+    '';
+
+    # 2. Restore preserved dynamic configs and apply OrbitOS layered/overwrite modular configurations
     home.activation.applyOrbitOSConfigs = lib.hm.dag.entryAfter [ "copyIllogicalImpulseConfigs" ] ''
       echo "=== Applying OrbitOS Modular Configurations ==="
+      
+      # Restore preserved dynamic runtime configs (e.g. nwg-displays outputs)
+      PRESERVE_DIR="$HOME/.local/state/orbitos/preserved"
+      if [ -d "$PRESERVE_DIR/hypr" ]; then
+        for f in "$PRESERVE_DIR/hypr"/*; do
+          if [ -f "$f" ]; then
+            baseName=$(basename "$f")
+            mkdir -p "$HOME/.config/hypr"
+            cp -f "$f" "$HOME/.config/hypr/$baseName"
+            chmod u+w "$HOME/.config/hypr/$baseName"
+            echo "[OrbitOS] Restored preserved dynamic config: ~/.config/hypr/$baseName"
+          fi
+        done
+      fi
+
       ${activationScripts}
     '';
   };

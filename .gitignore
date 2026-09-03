@@ -1,7 +1,4 @@
-/.idea
-.idea/
+.idea
 result
 result-*
-/flake.lock
-__pycache__/
-*.pyc
+flake.lock

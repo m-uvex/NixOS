@@ -51,6 +51,133 @@ let
     echo "==> Encrypted SSH archive saved to $ARCHIVE"
   '';
 
+  syncChatsScript = pkgs.writeScriptBin "sync-chats" ''
+    #!${pkgs.python3}/bin/python3
+    import sqlite3, os, base64, glob, json, time, shutil
+
+    def encode_varint(val):
+        res = bytearray()
+        while True:
+            b = val & 0x7f
+            val >>= 7
+            if val:
+                res.append(b | 0x80)
+            else:
+                res.append(b)
+                break
+        return bytes(res)
+
+    def encode_field(tag, wire_type, data):
+        header = encode_varint((tag << 3) | wire_type)
+        if wire_type == 0:
+            return header + encode_varint(data)
+        elif wire_type == 2:
+            if isinstance(data, str):
+                data = data.encode("utf-8")
+            return header + encode_varint(len(data)) + data
+        raise NotImplementedError("wire_type")
+
+    def make_timestamp(sec, nano=0):
+        return encode_field(1, 0, sec) + encode_field(2, 0, nano)
+
+    def make_ws_info(uri="file:///etc/nixos", repo="m-uvex/NixOS", repo_url="https://github.com/m-uvex/NixOS", branch="main"):
+        repo_msg = encode_field(1, 2, repo) + encode_field(2, 2, repo_url)
+        return (encode_field(1, 2, uri) +
+                encode_field(2, 2, uri) +
+                encode_field(3, 2, repo_msg) +
+                encode_field(4, 2, branch))
+
+    def build_summary_proto(cid, title, mtime, uri="file:///etc/nixos", repo="m-uvex/NixOS", repo_url="https://github.com/m-uvex/NixOS"):
+        ws_bytes = make_ws_info(uri, repo, repo_url)
+        ts_bytes = make_timestamp(mtime)
+        
+        sub17 = (encode_field(1, 2, ws_bytes) +
+                 encode_field(2, 2, ts_bytes) +
+                 encode_field(3, 2, cid) +
+                 encode_field(6, 2, cid) +
+                 encode_field(7, 2, uri))
+        
+        summary = (encode_field(1, 2, title) +
+                   encode_field(2, 0, 207) +
+                   encode_field(3, 2, ts_bytes) +
+                   encode_field(4, 2, cid) +
+                   encode_field(5, 0, 1) +
+                   encode_field(7, 2, ts_bytes) +
+                   encode_field(9, 2, ws_bytes) +
+                   encode_field(10, 2, ts_bytes) +
+                   encode_field(15, 2, bytes()) +
+                   encode_field(16, 0, 1) +
+                   encode_field(17, 2, sub17) +
+                   encode_field(22, 0, 1))
+        return summary
+
+    def build_top_entry(cid, summary_proto):
+        b64_str = base64.b64encode(summary_proto).decode("utf-8")
+        submsg = encode_field(1, 2, b64_str)
+        entry = encode_field(1, 2, cid) + encode_field(2, 2, submsg)
+        return encode_field(1, 2, entry)
+
+    target_user = os.environ.get("SUDO_USER") or os.environ.get("USER") or "m_uvex"
+    home_dir = os.path.expanduser("~" + target_user if target_user != os.environ.get("USER") else "~")
+    
+    db_path = os.path.join(home_dir, ".config/Antigravity IDE/User/globalStorage/state.vscdb")
+    backup_path = os.path.join(home_dir, ".config/Antigravity IDE/User/globalStorage/state.vscdb.backup")
+    conv_dir = os.path.join(home_dir, ".gemini/antigravity-ide/conversations")
+    brain_dir = os.path.join(home_dir, ".gemini/antigravity-ide/brain")
+
+    if not os.path.exists(conv_dir) or not os.path.exists(db_path):
+        exit(0)
+
+    try:
+        shutil.copyfile(db_path, backup_path)
+    except Exception:
+        pass
+
+    top_proto = bytearray()
+    dbs = glob.glob(os.path.join(conv_dir, "*.db"))
+    count = 0
+    for db in sorted(dbs, key=os.path.getmtime, reverse=True):
+        cid = os.path.basename(db)[:-3]
+        mtime = int(os.path.getmtime(db))
+        
+        title = None
+        t_file = os.path.join(brain_dir, cid, ".system_generated", "logs", "transcript.jsonl")
+        if os.path.exists(t_file):
+            try:
+                with open(t_file) as f:
+                    for line in f:
+                        d = json.loads(line)
+                        if d.get("type") == "USER_INPUT":
+                            c = d.get("content", "")
+                            if "<USER_REQUEST>" in c:
+                                req = c.split("<USER_REQUEST>")[1].split("</USER_REQUEST>")[0].strip()
+                                title = req.split("\n")[0][:60]
+                            else:
+                                title = c.strip().split("\n")[0][:60]
+                            break
+            except Exception:
+                pass
+        if not title:
+            title = "Conversation " + cid[:8]
+        
+        summary = build_summary_proto(cid, title, mtime)
+        entry_bytes = build_top_entry(cid, summary)
+        top_proto.extend(entry_bytes)
+        count += 1
+
+    encoded_b64 = base64.b64encode(bytes(top_proto)).decode("utf-8")
+
+    try:
+        conn = sqlite3.connect(db_path)
+        cur = conn.cursor()
+        cur.execute('INSERT OR REPLACE INTO ItemTable (key, value) VALUES ("antigravityUnifiedStateSync.trajectorySummaries", ?)', (encoded_b64,))
+        conn.commit()
+        conn.close()
+        print(f"==> Antigravity IDE: Synced {count} conversation histories to state.vscdb")
+    except Exception as e:
+        print(f"Warning: could not sync Antigravity IDE chat history: {e}")
+  '';
+
   rebuildScript = pkgs.writeShellScriptBin "rebuild" ''
     set -e
 
@@ -76,7 +203,8 @@ Options:
   --ask, -a            Prompt for confirmation before switching
   --show-trace         Show detailed Nix stack traces on evaluation error
 
-SSH Helpers:
+Helpers:
+  sync-chats           Synchronize all local conversation history into Antigravity IDE
   restore-ssh          Decrypt /etc/nixos/secrets/ssh.tar.age into ~/.ssh (interactive passphrase)
   backup-ssh           Encrypt ~/.ssh into /etc/nixos/secrets/ssh.tar.age with a passphrase
 
@@ -150,12 +278,11 @@ EOF
     echo "==> Building and applying configuration ($ACTION) for: $HOST..."
     ${pkgs.nh}/bin/nh os "$ACTION" /etc/nixos -H "$HOST" "''${EXTRA_ARGS[@]}"
 
-    # Post-build step: Prompt for interactive SSH key restoration if missing on switch/test
+    # Post-build step: Sync Antigravity IDE chat history
     if [ "$ACTION" = "switch" ] || [ "$ACTION" = "test" ]; then
-      TARGET_USER="''${SUDO_USER:-$USER}"
-      TARGET_HOME=$(getent passwd "$TARGET_USER" 2>/dev/null | cut -d: -f6)
-      TARGET_HOME="''${TARGET_HOME:-/home/$TARGET_USER}"
+      ${syncChatsScript}/bin/sync-chats || true
 
+      # Prompt for interactive SSH key restoration if missing on switch/test
       if [ -f /etc/nixos/secrets/ssh.tar.age ]; then
         if [ ! -f "$TARGET_HOME/.ssh/id_ed25519" ] && [ ! -f "$TARGET_HOME/.ssh/m_uvex" ] && [ ! -f "$TARGET_HOME/.ssh/id_rsa" ]; then
           echo ""
@@ -167,12 +294,25 @@ EOF
           fi
         fi
       fi
+
+      # Reload Hyprland if running
+      if pgrep -x Hyprland >/dev/null 2>&1 || [ -n "$HYPRLAND_INSTANCE_SIGNATURE" ]; then
+        echo "==> Reloading Hyprland configuration..."
+        if [ -n "$SUDO_USER" ] && [ "$SUDO_USER" != "root" ]; then
+          TARGET_UID=$(id -u "$SUDO_USER" 2>/dev/null || echo "1000")
+          sudo -u "$SUDO_USER" env XDG_RUNTIME_DIR="/run/user/$TARGET_UID" ${pkgs.hyprland}/bin/hyprctl reload >/dev/null 2>&1 || ${pkgs.hyprland}/bin/hyprctl reload >/dev/null 2>&1 || true
+        else
+          ${pkgs.hyprland}/bin/hyprctl reload >/dev/null 2>&1 || true
+        fi
+        echo "==> Hyprland reloaded."
+      fi
     fi
   '';
 in
 {
   environment.systemPackages = [
     rebuildScript
+    syncChatsScript
     restoreSshScript
     backupSshScript
     pkgs.nh
