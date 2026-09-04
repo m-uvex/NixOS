@@ -6,7 +6,7 @@ hl.on("hyprland.start", function ()
 
     -- Start graphical session target so xdg-desktop-portal and portals activate cleanly
     hl.exec_cmd("systemctl --user start nixos-fake-graphical-session.target")
-    hl.exec_cmd("systemctl --user restart xdg-desktop-portal-hyprland xdg-desktop-portal-gtk xdg-desktop-portal")
+    hl.exec_cmd("bash -c 'systemctl --user restart xdg-desktop-portal-hyprland xdg-desktop-portal-gtk; sleep 0.5; systemctl --user restart xdg-desktop-portal'")
 
     -- Initialize Material cursor based on active wallpaper palette
     hl.exec_cmd("~/.config/cursor/cursor-material-set-color.sh")

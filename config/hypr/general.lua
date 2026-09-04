@@ -13,7 +13,7 @@ hl.config({
             new_optimizations = true,
             size = 10,
             passes = 3,
-            brightness = 1,
+            brightness = 0.8,
             noise = 0.05,
             contrast = 1,
             vibrancy = 0,

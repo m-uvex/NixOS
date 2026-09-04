@@ -17,9 +17,10 @@ stacksidebar,
 popover.background,
 .menu,
 .context-menu {
-    background-color: alpha(@theme_bg_color, 0.25);
+    background-color: alpha(@theme_bg_color, 0);
 }
 
+/*
 button,
 button *,
 entry,
@@ -41,3 +42,4 @@ toolbar,
 headerbar {
     opacity: 1;
 }
+*/

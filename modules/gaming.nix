@@ -26,7 +26,6 @@
     # Minecraft	
     prismlauncher
     lunar-client
-    # modrinth-app # Takes long to compile. Unneeded.
     mcpelauncher-ui-qt
     
     # Misc
