@@ -1,0 +1,4 @@
+# OrbitOS
+{
+  allowUnfree = true;
+}

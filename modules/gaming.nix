@@ -16,6 +16,11 @@
   hardware.xpadneo.enable = true;
   services.udev.packages = [ pkgs.dualsensectl ];
 
+  # Flatpak Apps
+  services.flatpak.packages = [
+    "com.modrinth.ModrinthApp"
+  ];
+
   environment.systemPackages = with pkgs; [
     
     # Launchers
@@ -27,6 +32,9 @@
     prismlauncher
     lunar-client
     mcpelauncher-ui-qt
+    (writeShellScriptBin "modrinth" ''
+      exec flatpak run com.modrinth.ModrinthApp "$@"
+    '')
     
     # Misc
     mangohud

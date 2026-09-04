@@ -20,9 +20,8 @@
       url = "github:youwen5/zen-browser-flake";
       inputs.nixpkgs.follows = "nixpkgs";
     };
-    nix-software-center = {
-      url = "github:snowfallorg/nix-software-center";
-      inputs.nixpkgs.follows = "nixpkgs";
+    nix-flatpak = {
+      url = "github:gmodena/nix-flatpak";
     };
     driftwm = {
       url = "github:malbiruk/driftwm";
@@ -40,7 +39,7 @@
     };
   };
 
-  outputs = { self, nixpkgs, home-manager, driftwm, ... }@inputs:
+  outputs = { self, nixpkgs, home-manager, driftwm, nix-flatpak, ... }@inputs:
   let
     system = "x86_64-linux";
     username = "m_uvex";
@@ -64,6 +63,7 @@
       lt-hp15-nix = nixpkgs.lib.nixosSystem {
         inherit system specialArgs;
         modules = [
+          nix-flatpak.nixosModules.nix-flatpak
           driftwm.nixosModules.default
           home-manager.nixosModules.home-manager
           homeManagerModule
@@ -78,6 +78,7 @@
       pc-main-nix = nixpkgs.lib.nixosSystem {
         inherit system specialArgs;
         modules = [
+          nix-flatpak.nixosModules.nix-flatpak
           driftwm.nixosModules.default
           home-manager.nixosModules.home-manager
           homeManagerModule

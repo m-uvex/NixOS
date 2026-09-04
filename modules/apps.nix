@@ -11,8 +11,7 @@
     python3Packages.pygobject3 python3Packages.pycairo
 
     # Productivity, Browsers & Web
-    nautilus mission-center gnome-software obsidian
-    inputs.nix-software-center.packages.${pkgs.stdenv.hostPlatform.system}.nix-software-center
+    nautilus mission-center obsidian
     inputs.zen-browser.packages.${pkgs.stdenv.hostPlatform.system}.default
     
     # Messengers & Social
