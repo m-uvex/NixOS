@@ -17,7 +17,7 @@ Declarative, multi-host, multi-dots, feature-full, flake based NixOS configs.
 ## 📁 Repository Structure
 
 ```
-.
+/orbitos/
 ├── config/                 # Modular user dotfiles & app configurations
 │   ├── cursor/             # Dynamic wallpaper-matching cursor generator
 │   ├── fish/               # Fish shell configuration & environment
@@ -30,28 +30,34 @@ Declarative, multi-host, multi-dots, feature-full, flake based NixOS configs.
 │   ├── lt-hp15-nix/        # Orion (Laptop)
 │   ├── pc-main-nix/        # Andromeda (Main PC)
 │   └── srv-c4030-nix/      # Lunar (Server & WoL Relay)
-├── modules/                # Modular system & user configurations
+├── modules/                # Modular system & hardware configurations
 │   ├── app-configs/        # Per-app integration hooks (fish, gtk, hypr, kitty)
 │   ├── app-configs.nix     # Modular app layer & overwrite engine
 │   ├── apps.nix            # System-wide GUI apps and tools
 │   ├── assets/             # Wallpapers and media
-│   ├── core.nix            # Base system, users, OpenSSH, and networking
+│   ├── core.nix            # Base system, OpenSSH, nh, and networking
 │   ├── desktop.nix         # Hyprland, audio, display managers
-│   ├── docker.nix          # Docker containers (TODO)
+│   ├── docker.nix          # Docker daemon configuration
 │   ├── gaming.nix          # Steam, GameMode, Minecraft, controller drivers
 │   ├── hardware/           # Modular CPU & GPU hardware profiles
-│   ├── home.nix            # Home Manager environment & themes
 │   ├── rebuild.nix         # OrbitOS rebuild CLI & SSH key tools
-│   └── remote-desktop/     # Sunshine streaming host & Moonlight client
-├── README.md
-└── secrets/
-    └── ssh.tar.age         # Passphrase-encrypted ~/.ssh archive bundle
+│   ├── remote-desktop/     # Sunshine streaming host & Moonlight client
+│   └── server/             # Server stacks, storage, and filesystem profiles
+├── secrets/
+│   └── ssh.tar.age         # Passphrase-encrypted ~/.ssh archive bundle
+└── users/                  # Modular user accounts & user environments
+    ├── m_uvex/             # Musa Murad (NixOS account & Home Manager environment)
+    │   ├── default.nix     # System user account, groups, password & SSH keys
+    │   └── home.nix        # Desktop Home Manager dotfiles, themes & services
+    └── oliver/             # Oliver (Pocketbase dev user)
+        └── default.nix     # System user account & restricted developer groups
 ```
 
 ---
 
 ## ✨ Key Features
 
+* **Modular User Management:** User accounts and their respective desktop/service environments live under `users/`, allowing any host to reference only the users it needs.
 * **Dynamic material cursors:** Cursors are dynamically colored based on the wallpaper, allowing for an overhauled and visually consistent experience.
 * **Masterized SSH across devices:** `~/.ssh` is encrypted with age passphrase and committed. On first rebuild, it extracts all keys using the passphrase.
 * **Visual Rebuild Tool:** Custom `rebuild` CLI tool for quick and easy system rebuild with visual package diffs, flake updating (`rebuild update`), SSH key syncing and more.
@@ -78,17 +84,18 @@ Declarative, multi-host, multi-dots, feature-full, flake based NixOS configs.
 # Get into a temporary shell with git installed
 nix-shell -p git
 
-# clone repo
-sudo git clone https://github.com/m-uvex/NixOS.git /etc/nixos
+# Clone repo to /orbitos and create symlink for compatibility
+sudo git clone https://github.com/m-uvex/NixOS.git /orbitos
+sudo ln -s /orbitos /etc/nixos
 
 # Generate hardware profile into host (e.g. lt-hp15-nix)
-sudo nixos-generate-config --root /etc/nixos/hosts/lt-hp15-nix/
+sudo nixos-generate-config --root /orbitos/hosts/lt-hp15-nix/
 ```
 ### 3. Build
 ***PLEASE EDIT THE CONFIG BEFORE GENERATING! with my exact config, you won't be able to log in or do much of anything because of the hashed password. It is advised that you fork the repo into your own first!***
 
 ```bash
-cd /etc/nixos
+cd /orbitos
 sudo git add .
 sudo nixos-install --flake .#lt-hp15-nix
 # Enter age decryption passphrase when prompted to restore ~/.ssh

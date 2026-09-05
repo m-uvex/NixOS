@@ -1,22 +1,10 @@
-{ pkgs, inputs, username ? "m_uvex", ... }:
+{ pkgs, inputs, ... }:
 
 {
   imports = [
     ./hardware/default.nix
     ./rebuild.nix
   ];
-
-  # --- ACCOUNTS ---
-  users.users.${username} = {
-    isNormalUser = true;
-    description = "Musa Murad";
-    extraGroups = [ "networkmanager" "wheel" "video" "audio" "storage" ];
-    hashedPassword = "$6$tFhMrTUbXvCtUK2O$VyQs7xSfEOGBPZlb8UZPOZEA6tr2ZR5ixEvbO1wwhN6iGb3kmgvTCVDbGmAx1u33FSomD4wWIQFw.ly3yGj141";
-    openssh.authorizedKeys.keys = [
-      # Shared SSH authorized keys for m_uvex across all hosts
-      "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIK+Wl/P/x5uB5y442bA5rFw3e1k6FpY2FjYp9/m_uvex m_uvex"
-    ];
-  };
 
   # --- SSH SERVER & CLIENT INFRASTRUCTURE ---
   services.openssh = {
@@ -37,17 +25,17 @@
 
       Host lunar
         HostName 100.78.151.49
-        User ${username}
+        User m_uvex
         ForwardAgent yes
 
       Host andromeda
         HostName pc-main-nix
-        User ${username}
+        User m_uvex
         ForwardAgent yes
 
       Host orion
         HostName lt-hp15-nix
-        User ${username}
+        User m_uvex
         ForwardAgent yes
     '';
   };
@@ -129,7 +117,7 @@
   # --- NIX HELPER (NH) ---
   programs.nh = {
     enable = true;
-    flake = "/etc/nixos";
+    flake = "/orbitos";
     clean = {
       enable = true;
       extraArgs = "--keep 5 --keep-since 7d";

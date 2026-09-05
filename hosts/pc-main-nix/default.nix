@@ -8,6 +8,7 @@
     ../../modules/hardware/intel-cpu.nix
     # When building on actual PC, swap to: ./hardware-configuration.nix
     
+    ../../users/m_uvex
     ../../modules/core.nix
     ../../modules/desktop.nix
     ../../modules/apps.nix

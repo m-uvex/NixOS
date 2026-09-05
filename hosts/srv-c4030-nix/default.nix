@@ -4,6 +4,8 @@
   imports = [
     ./hardware-configuration.nix
     ./disko.nix
+    ../../users/m_uvex
+    ../../users/oliver
     ../../modules/core.nix
     ../../modules/server/default.nix
     ../../modules/docker.nix

@@ -57,7 +57,7 @@
       home-manager.useUserPackages = true;
       home-manager.backupFileExtension = "backup";
       home-manager.extraSpecialArgs = specialArgs;
-      home-manager.users.${username} = import ./modules/home.nix;
+      home-manager.users.m_uvex = import ./users/m_uvex/home.nix;
     };
   in {
 
