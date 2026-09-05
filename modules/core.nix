@@ -55,7 +55,7 @@
   # --- DISK MANAGEMENT & AUTOMOUNT (SERVER + DESKTOP) ---
   services.udisks2.enable = true;
   services.gvfs.enable = true;
-  services.devmon.enable = true;
+  programs.fuse.userAllowOther = true;
 
   # Allow wheel group users and automount services to mount/eject disks without password prompts
   security.polkit.enable = true;

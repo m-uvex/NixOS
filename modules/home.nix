@@ -52,6 +52,34 @@ EOF
     automount = true;
     notify = true;
     tray = "auto";
+    settings = {
+      device_config = [
+        # Ignore other OS root partition if present
+        {
+          id_uuid = "7c44d3c0-6394-4479-846a-2815ec797e66";
+          ignore = true;
+        }
+        # Automount all filesystems (removable USBs/drives and internal secondary drives)
+        {
+          is_filesystem = true;
+          ignore = false;
+          automount = true;
+        }
+      ];
+    };
+  };
+
+  # Ensure udiskie daemon survives compositor restarts and doesn't get blocked
+  systemd.user.services.udiskie = {
+    Unit = {
+      Description = "udiskie mount daemon";
+      After = lib.mkForce [ "graphical-session.target" ];
+      PartOf = [ "graphical-session.target" ];
+    };
+    Service = {
+      Restart = "always";
+      RestartSec = 3;
+    };
   };
 
   # --- NETWORK & GVFS AUTOMOUNT SERVICE (PARALLEL MULTI-SHARE & GOOGLE DRIVE LOGIN AUTOMOUNT) ---
@@ -111,6 +139,7 @@ EOF
     };
     Service = {
       Type = "oneshot";
+      RemainAfterExit = true;
       ExecStart = "${pkgs.writeShellScript "rclone-cloud-automount" ''
         RCLONE_CONF="$HOME/.config/rclone/rclone.conf"
         if [ -f "$RCLONE_CONF" ]; then
@@ -122,11 +151,22 @@ EOF
               echo "Automounting Rclone cloud remote '$remote' to $MOUNT_DIR..."
               ${pkgs.rclone}/bin/rclone mount "$remote:" "$MOUNT_DIR" \
                 --vfs-cache-mode full \
-                --daemon >/dev/null 2>&1 &
+                --daemon
             fi
           done
         fi
-        wait
+      ''}";
+      ExecStop = "${pkgs.writeShellScript "rclone-cloud-stop" ''
+        RCLONE_CONF="$HOME/.config/rclone/rclone.conf"
+        if [ -f "$RCLONE_CONF" ]; then
+          REMOTES=$(${pkgs.gnugrep}/bin/grep -E '^\[.*\]$' "$RCLONE_CONF" | ${pkgs.gnused}/bin/sed 's/[\[\]]//g')
+          for remote in $REMOTES; do
+            MOUNT_DIR="$HOME/Cloud/$remote"
+            if ${pkgs.util-linux}/bin/mountpoint -q "$MOUNT_DIR"; then
+              /run/wrappers/bin/fusermount -u "$MOUNT_DIR" || true
+            fi
+          done
+        fi
       ''}";
     };
   };
@@ -187,6 +227,12 @@ EOF
         echo "No rclone config found at ~/.config/rclone/rclone.conf."
         echo "Run 'rclone config' to add your Google Drive or other cloud accounts!"
       fi
+      echo "Done."
+    '')
+
+    (pkgs.writeShellScriptBin "automount-storage" ''
+      echo "Scanning and automounting all storage devices..."
+      ${pkgs.udiskie}/bin/udiskie-mount -a
       echo "Done."
     '')
   ];

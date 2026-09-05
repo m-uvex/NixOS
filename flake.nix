@@ -28,6 +28,12 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
+    # Declarative Partitioning
+    disko = {
+      url = "github:nix-community/disko";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+
     # illogical-impulse & end4-pC UI Profiles
     illogical-flake = {
       url = "github:soymou/illogical-flake";
@@ -39,7 +45,7 @@
     };
   };
 
-  outputs = { self, nixpkgs, home-manager, driftwm, nix-flatpak, ... }@inputs:
+  outputs = { self, nixpkgs, home-manager, driftwm, nix-flatpak, disko, ... }@inputs:
   let
     system = "x86_64-linux";
     username = "m_uvex";
@@ -93,6 +99,7 @@
       srv-c4030-nix = nixpkgs.lib.nixosSystem {
         inherit system specialArgs;
         modules = [
+          disko.nixosModules.disko
           ./hosts/srv-c4030-nix/default.nix
         ];
       };
